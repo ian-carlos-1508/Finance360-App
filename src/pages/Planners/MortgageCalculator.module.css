@@ -1,0 +1,198 @@
+/* Replace file: src/pages/Planners/MortgageCalculator.module.css */
+
+.pageHeader {
+  /* This 'composes' is VALID */
+  composes: listHeader from '../Settings/Settings.module.css';
+  margin-bottom: 2rem;
+}
+
+.title {
+  /* This 'composes' is VALID */
+  composes: title from '../Settings/Settings.module.css';
+  margin-bottom: 0;
+}
+
+.backButton {
+  /* This 'composes' is VALID */
+  composes: cancelButton from '../Settings/Settings.module.css';
+  text-decoration: none;
+}
+
+.calculatorGrid {
+  display: grid;
+  grid-template-columns: minmax(300px, 350px) 1fr;
+  grid-template-areas:
+    "inputs table"
+    "kpis   table";
+  gap: 2rem;
+}
+
+.inputCard {
+  grid-area: inputs;
+  /* This 'composes' is VALID */
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  /* This 'composes' is VALID */
+  composes: label from '../Settings/Settings.module.css';
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  /* This 'composes' is VALID */
+  composes: input from '../Settings/Settings.module.css';
+  width: 100%;
+}
+
+.inputGroup {
+  position: relative;
+}
+.inputAddonSymbol {
+  position: absolute;
+  top: 0;
+  left: 0.75rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  pointer-events: none;
+}
+.inputWithAddon {
+  /* This 'composes' is VALID */
+  composes: input;
+  padding-left: 1.8rem;
+}
+
+.kpiGrid {
+  grid-area: kpis;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.kpiCard {
+  /* This 'composes' is VALID */
+  composes: kpiCard from '../Settings/Settings.module.css';
+  text-align: center;
+  /* Override min-height from master file */
+  min-height: 0;
+}
+
+.kpiTitle {
+  /* This 'composes' is VALID */
+  composes: kpiTitle from '../Settings/Settings.module.css';
+  text-align: center;
+}
+
+.kpiValue {
+  /* This 'composes' is VALID */
+  composes: kpiValue from '../Settings/Settings.module.css';
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+.tableCard {
+  grid-area: table;
+  /* This 'composes' is VALID */
+  composes: card from '../Settings/Settings.module.css';
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableTitle {
+  /* This 'composes' is VALID */
+  composes: cardTitle from '../Settings/Settings.module.css';
+  padding: 1.5rem; /* Add padding back (cardTitle has padding-bottom) */
+  margin-bottom: 0; /* Override cardTitle margin */
+}
+
+.tableContainer {
+  flex-grow: 1;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.table {
+  /* This 'composes' is VALID */
+  composes: table from '../Settings/Settings.module.css';
+  width: 100%;
+}
+
+/*
+ * =======================================
+ * THE STICKY HEADER BUG FIX
+ * We CANNOT 'composes' from 'table th'
+ * We manually replicate the styles instead.
+ * =======================================
+ */
+.tableHeader {
+  /* --- Manually copied from Settings.module.css 'table th, .table td' --- */
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  border-bottom: 1px solid #f3f4f6;
+
+  /* --- Manually copied from Settings.module.css 'table th' --- */
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+
+  /* --- THE ACTUAL BUG FIX --- */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #ffffff; /* Opaque white background from .card */
+}
+
+.tableCell {
+  /* --- Manually copied from Settings.module.css 'table th, .table td' --- */
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  border-bottom: 1px solid #f3f4f6;
+
+  /* --- Manually copied from Settings.module.css 'table td' --- */
+  color: #111827;
+
+  /* --- Local override --- */
+  text-align: right;
+}
+
+.tableCellYear {
+  /* --- Manually copied from Settings.module.css 'table th, .table td' --- */
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  border-bottom: 1px solid #f3f4f6;
+
+  /* --- Manually copied from Settings.module.css 'table td' --- */
+  color: #111827;
+
+  /* --- Local override --- */
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .calculatorGrid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "inputs"
+      "kpis"
+      "table";
+  }
+  .tableContainer {
+    max-height: 400px;
+  }
+}

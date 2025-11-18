@@ -1,0 +1,116 @@
+/* Replace file: src/pages/FinancialHealth/FinancialHealth.module.css */
+
+.title {
+  composes: title from "../Settings/Settings.module.css";
+}
+
+/* --- Base Compositions (from Settings.module.css) --- */
+.filterWrapper {
+  composes: filterWrapper from "../Settings/Settings.module.css";
+  justify-content: flex-start; /* Override to align left */
+  margin-bottom: 2rem;
+}
+
+.label {
+  composes: label from "../Settings/Settings.module.css";
+}
+
+.input {
+  composes: input from "../Settings/Settings.module.css";
+}
+
+.chartCard {
+  composes: card from "../Settings/Settings.module.css";
+  overflow: visible; 
+}
+
+.cardTitle {
+  composes: cardTitle from "../Settings/Settings.module.css";
+}
+
+.chartContainer {
+  composes: chartContainer from "../Settings/Settings.module.css";
+  height: 300px; 
+}
+
+/* --- Page-Specific Layouts --- */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.chartGrid {
+  display: grid;
+  /* This will fit 3 charts on a wide screen, and wrap on smaller screens */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* --- Centering Wrapper for Health Score KPI --- */
+.centeredKpiWrapper {
+  display: flex;
+  justify-content: center; /* Center the card horizontally */
+  max-width: 100%;
+}
+.centeredKpiWrapper > * {
+  width: 100%;
+  max-width: 500px; /* Constrain the width of the card itself */
+}
+/* --- End Centering Wrapper --- */
+
+
+/* --- Refactored KPI Card Styles --- */
+
+/* 1. Base Card Style */
+.kpiCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 110px;
+  padding: 1rem 1.5rem;
+  border-left: 5px solid transparent;
+  overflow: visible;
+}
+
+/* 2. Status Colors */
+.good {
+  border-left-color: #10b981; /* green-500 */
+}
+.bad {
+  border-left-color: #ef4444; /* red-500 */
+}
+.neutral {
+  border-left-color: #6b7280; /* gray-500 */
+}
+.warning {
+  border-left-color: #f59e0b; /* amber-500 */
+}
+
+/* 3. Text Styles */
+.kpiHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.kpiTitle {
+  composes: kpiTitle from "../Settings/Settings.module.css";
+}
+
+.kpiValue {
+  composes: kpiValue from "../Settings/Settings.module.css";
+}
+
+.kpiContext {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}

@@ -1,0 +1,110 @@
+/* Cree este nuevo archivo: src/components/Transactions/GenericTransactionList.module.css */
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 80px; 
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.listItem:first-child {
+  border-top: 1px solid #f3f4f6;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.iconWrapper.income {
+  background-color: #ecfdf5; /* Light Green */
+  color: #10b981; /* Green */
+}
+
+.iconWrapper.expense {
+  background-color: #fef2f2; /* Light Red */
+  color: #ef4444; /* Red */
+}
+
+.iconWrapper.iconTransfer {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #4b5563; /* gray-600 */
+}
+
+.details p {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.details strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.details span {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.amount {
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.amount.income,
+.amount.amountIncome {
+  color: #10b981;
+}
+
+.amount.expense,
+.amount.amountExpense {
+  color: #ef4444;
+}
+
+.amount.amountTransfer {
+  color: #4b5563; /* gray-600 */
+}
+
+.footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.viewAllLink {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3b82f6;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.inlineTag {
+  margin-right: 0.5rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem; 
+  font-size: 0.65rem;
+}

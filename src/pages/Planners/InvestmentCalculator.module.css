@@ -1,0 +1,131 @@
+/* Create file: src/pages/Planners/InvestmentCalculator.module.css */
+
+.pageHeader {
+  composes: listHeader from '../Settings/Settings.module.css';
+  margin-bottom: 2rem;
+}
+
+.title {
+  composes: title from '../Settings/Settings.module.css';
+  margin-bottom: 0;
+}
+
+.backButton {
+  composes: cancelButton from '../Settings/Settings.module.css';
+  text-decoration: none;
+}
+
+.calculatorGrid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+}
+
+.inputCard {
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  composes: label from '../Settings/Settings.module.css';
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  composes: input from '../Settings/Settings.module.css';
+  width: 100%; /* Full width of card */
+}
+
+/* --- NEW STYLES FOR CURRENCY INPUT --- */
+
+.inputGroup {
+  position: relative;
+}
+
+.inputAddonSymbol {
+  position: absolute;
+  top: 0;
+  left: 0.75rem; /* Indent the symbol */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #6b7280; /* Gray text */
+  pointer-events: none; /* Allows clicking "through" the symbol */
+}
+
+/* --- BUG FIX: Replaced 'composes' with explicit styles --- */
+.inputWithAddon {
+  /* Copied from .input in Settings.module.css */
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  
+  /* Set padding explicitly to avoid shorthand conflict */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.75rem;
+  
+  /* The Fix: Generous left padding */
+  padding-left: 2.25rem; 
+  width: 100%;
+}
+/* --- END BUG FIX --- */
+
+
+.resultCard {
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+}
+
+.kpiCard {
+  composes: kpiCard from '../Settings/Settings.module.css';
+  composes: blue from '../Settings/Settings.module.css';
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.kpiTitle {
+  composes: kpiTitle from '../Settings/Settings.module.css';
+  text-align: center;
+}
+
+.kpiValue {
+  composes: kpiValue from '../Settings/Settings.module.css';
+  font-size: 2.5rem; /* Make it large */
+  text-align: center;
+}
+
+.summary {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+.summary strong {
+  color: #10b981; /* Green */
+}
+
+.chartContainer {
+  composes: chartContainer from '../Settings/Settings.module.css';
+  height: 350px; /* Taller chart */
+  margin-top: 1rem;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 900px) {
+  .calculatorGrid {
+    grid-template-columns: 1fr;
+  }
+}

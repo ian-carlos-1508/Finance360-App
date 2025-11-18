@@ -1,0 +1,90 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 80px;
+  align-items: center; /* This line is important */
+  gap: 1rem;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.listItem:first-child {
+  border-top: 1px solid #f3f4f6;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem; /* 12px */
+}
+
+.iconWrapper.income {
+  background-color: #ecfdf5; /* Light Green */
+  color: #10b981; /* Green */
+}
+
+.iconWrapper.expense {
+  background-color: #fef2f2; /* Light Red */
+  color: #ef4444; /* Red */
+}
+
+.details p {
+  margin: 0;
+  font-size: 0.8rem; /* 9px */
+}
+
+.details strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.details span {
+  font-size: 0.8rem; /* 8px */
+  color: #6b7280;
+}
+
+.amount {
+  text-align: right;
+  font-size: 0.8rem; /* 10px */
+  font-weight: 600;
+}
+
+.amount.income {
+  color: #10b981;
+}
+
+.amount.expense {
+  color: #ef4444;
+}
+
+.footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.viewAllLink {
+  font-size: 0.9rem; /* 9px */
+  font-weight: 600;
+  color: #3b82f6;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem; /* This is the correct horizontal layout */
+}

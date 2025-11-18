@@ -1,0 +1,621 @@
+/* src/pages/Settings/Settings.module.css */
+/* This is our "master" CSS file with final 2px-reduced fonts */
+
+.title {
+  font-size: 1.8rem; /* 18px (was 20px) */
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+/* --- GRID LAYOUTS FOR PAGES --- */
+.pageGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.kpiSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+.tableSection {
+  grid-column: 1 / -1;
+}
+.analyticsSection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* --- BASE CARD STYLE --- */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.cardTitle {
+  font-size: 1.0rem; /* 12px (was 14px) */
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+
+/* --- KPI CARD STYLES --- */
+.kpiCard {
+  composes: card;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 110px; /* Adjusted height */
+  padding: 1rem 1.5rem;
+  border-left: 5px solid transparent;
+}
+.kpiCard.blue { border-left-color: #3b82f6; }
+.kpiCard.green { border-left-color: #10b981; }
+.kpiCard.red { border-left-color: #ef4444; }
+.kpiCard.gray { border-left-color: #6b7280; }
+
+.kpiTitle {
+  font-size: 0.8rem; /* 8px (was 9px) */
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0;
+}
+
+.kpiValue {
+  font-size: 1.6rem; /* 16px (was 18px) */
+  font-weight: 700;
+  color: #111827;
+  margin: 0.5rem 0 0 0;
+}
+
+.kpiChange {
+  font-size: 0.8rem; /* 8px (was 8px) - kept the same, as 7px is too small */
+  font-weight: 500;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.kpiChange.positive { color: #10b981; }
+.kpiChange.negative { color: #ef4444; }
+.kpiChange.neutral { color: #6b7280; }
+
+/* --- LIST/TABLE STYLES --- */
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.listTitle {
+  font-size: 1.0rem; /* 10px (was 12px) */
+  font-weight: 600;
+  margin: 0;
+}
+
+.addButton {
+  font-size: 0.9rem; /* 9px (was 10px) */
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.addButton:hover {
+  background-color: #2563eb;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0.5rem 0.25rem; /* UPDATED: Reduced padding */
+  font-size: 0.8rem; /* UPDATED: Reduced font size */
+  border-bottom: 1px solid #f3f4f6;
+}.listItem:first-child {
+  border-top: 1px solid #f3f4f6;
+}
+.listItem p {
+  margin: 0;
+}
+.listItem strong {
+  font-weight: 600;
+}
+
+/* --- MODAL FORM STYLES --- */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.label {
+  font-size: 0.8rem; /* 8px (was 10px) */
+  font-weight: 600;
+  color: #374151;
+}
+
+.input {
+  font-size: 0.9rem; /* 9px (was 11px) */
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.saveButton {
+  composes: addButton;
+}
+.cancelButton {
+  composes: addButton;
+  background-color: #6b7280;
+}
+.cancelButton:hover {
+  background-color: #4b5563;
+}
+
+/* --- PROFILE CARD STYLES --- */
+.profileInfo {
+  font-size: 0.9rem; /* 9px (was 11px) */
+  color: #374151;
+}
+.profileInfo strong {
+  color: #111827;
+}
+.logoutButton {
+  composes: cancelButton;
+  width: 120px;
+  margin-top: 1rem;
+}
+
+/* --- ERROR TEXT --- */
+.errorText {
+  font-size: 0.8rem; /* 8px (was 10px) */
+  color: #ef4444;
+  text-align: left;
+  margin: 0;
+}
+
+/* --- CHART CONTAINER STYLES --- */
+.chartContainer {
+  width: 100%;
+  height: 250px;
+}
+
+/* --- NEW: Icon Button Styles --- */
+
+.iconButton, .iconButtonDanger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  font-size: 1.2rem; /* 12px */
+  color: #6b7280; /* Gray */
+  display: flex;
+  align-items: center;
+}
+
+.iconButton:hover {
+  background-color: #f3f4f6; /* Light gray background */
+  color: #3b82f6; /* Blue icon */
+}
+
+.iconButtonDanger {
+  composes: iconButton;
+  color: #9ca3af; /* Lighter gray */
+}
+
+.iconButtonDanger:hover {
+  background-color: #fef2f2; /* Light red background */
+  color: #ef4444; /* Red icon */
+}
+
+/* --- NEW: Delete Modal Styles --- */
+
+.deleteModalContent {
+  text-align: center;
+}
+
+.warningIcon {
+  font-size: 3rem; /* 30px */
+  color: #ef4444; /* Red */
+  margin-bottom: 1rem;
+}
+
+.deleteModalText {
+  font-size: 1.1rem; /* 11px */
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.deleteModalText strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.deleteButton {
+  composes: addButton;
+  background-color: #ef4444; /* Red */
+}
+
+.deleteButton:hover {
+  background-color: #dc2626; /* Darker red */
+}
+
+/* NEW: For the small text in lists */
+.listItemSubtext {
+  font-size: 0.7rem; /* 7px */
+  color: #6b7280;
+}
+
+/* --- NEW: Filter Button Styles --- */
+
+.filterGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filterButton {
+  background-color: #f3f4f6; /* Light gray */
+  color: #4b5563; /* Darker gray text */
+  border: 1px solid #e5e7eb;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem; /* 8px */
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  background-color: #e5e7eb;
+}
+
+.filterButtonActive {
+  composes: filterButton;
+  background-color: #3b82f6; /* Blue */
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+/* --- NEW: Filter Wrapper (for date filters, etc.) --- */
+.filterWrapper {
+  display: flex;
+  justify-content: flex-end; /* Aligns filters to the right */
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap; /* Allows filters to wrap on small screens */
+  margin-bottom: 1rem; /* Space above the card */
+}
+
+.filterWrapper .label {
+  font-size: 0.8rem; /* 8px */
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.filterWrapper .input {
+  font-size: 0.8rem; /* 8px */
+  padding: 0.3rem 0.6rem;
+  width: 130px;
+  margin-right: 1rem; /* NEW: Adds 1rem (10px) of space to the right */
+}
+
+/* --- NEW: Inline Add Button (for modals) --- */
+.inlineAddButton {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.inlineAddButton:hover {
+  text-decoration: underline;
+}
+
+/* NEW: For clickable names in lists */
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit; /* Inherits the <strong> styles */
+  color: #111827; /* Inherits the <strong> color */
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.linkButton:hover {
+  color: #3b82f6; /* Blue on hover */
+  text-decoration: underline;
+}
+
+/* --- NEW: Tab Navigation Styles --- */
+.tabHeader {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem; /* 10px */
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* Sits on top of the main border */
+}
+
+.tabButtonActive {
+  composes: tabButton;
+  color: #3b82f6;
+  font-weight: 600;
+  border-bottom-color: #3b82f6;
+}
+
+/* --- NEW: Full Table Styles --- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  /* --- THIS IS THE CHANGE --- */
+  font-size: 0.7rem; /* Was 0.8rem */
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.table td {
+  color: #111827;
+}
+
+/* --- REGLAS DE IMPRESIÓN MEJORADAS FINAL --- */
+@media print {
+  
+  /* NUEVO: Sugiere al navegador imprimir en horizontal */
+  @page {
+    size: landscape;
+  }
+
+  /* Oculta los elementos de la UI que no queremos imprimir */
+  .title, 
+  .tabHeader, 
+  .filterWrapper,
+  .reportHint /* Oculta el aviso de colapsar al imprimir */ {
+    display: none !important;
+  }
+
+  /* --- AJUSTES DE FUENTE Y DISEÑO PARA IMPRESIÓN --- */
+
+  /* Asegura que el reporte use todo el espacio */
+  .card {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Reduce el título del reporte (ej. "Balance Sheet") a un tamaño razonable */
+  .cardTitle {
+    font-size: 1.5rem; /* 15px */
+    margin-bottom: 0.8rem !important; /* MÁS ESPACIO */
+    padding-bottom: 0.5rem;
+    font-weight: bold !important; /* TÍTULO EN NEGRITA */
+  }
+
+  /* Aplica un margen inferior a los párrafos dentro del card (como la fecha) */
+  .card p {
+    margin-bottom: 0.8rem !important; /* MÁS ESPACIO PARA LA FECHA */
+  }
+  
+  /* Reduce los subtítulos (ej. "Assets", "Liabilities") */
+  .listTitle {
+    font-size: 1.1rem; /* 11px */
+    font-weight: bold !important; /* SUBTÍTULOS EN NEGRITA */
+  }
+
+  /* Reduce el texto de la tabla a 0.8rem (8px) para que sea consistente */
+  .table th, 
+  .table td {
+    font-size: 0.8rem !important; /* ¡Importante! Fuerza el tamaño */
+    padding: 6px 8px; /* Reduce el padding para que quepa más */
+  }
+  
+  /* Usa los estilos de tabla condensada si están presentes */
+  .tableCondensed th,
+  .tableCondensed td {
+    font-size: 0.7rem !important; /* Aún más pequeño para impresión horizontal */
+    padding: 4px 6px !important;
+  }
+
+  /* Reduce las tarjetas KPI */
+  .kpiSection {
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb; /* Añade un separador */
+  }
+  .kpiCard {
+    padding: 0.5rem 1rem;
+    border-width: 3px;
+    min-height: 0;
+  }
+  .kpiTitle {
+    font-size: 0.8rem; /* 8px */
+  }
+  .kpiValue {
+    font-size: 1.4rem; /* 14px */
+  }
+
+  /* PIE DE PÁGINA SOLO PARA IMPRESIÓN */
+  .printFooter {
+    display: block !important; /* Mostrar solo al imprimir */
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 0.7rem;
+    color: #6b7280;
+  }
+}
+
+/* Add to Settings.module.css */
+
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 99px;
+  line-height: 1;
+  text-align: center;
+  user-select: none;
+}
+
+/* --- FIX: Updated Tag Colors --- */
+.tagNeed {
+  background-color: #dcfce7; /* Green-100 */
+  color: #166534; /* Green-800 */
+}
+
+.tagWant {
+  background-color: #fecaca; /* Red-200 */
+  color: #b91c1c; /* Red-800 */
+}
+
+/* --- Add to settings.module.css --- */
+
+.paginationContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid #e5e7eb; /* Matches your card borders */
+  font-size: 0.8rem; /* Matches your label/input fonts */
+  color: #4b5563; /* Matches your filter text */
+}
+
+.paginationInfo {
+  color: #374151; /* Matches your labels */
+}
+
+.paginationInfo strong {
+  color: #111827; /* Matches your strong text */
+}
+
+.paginationControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.paginationButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db; /* Matches your inputs */
+  border-radius: 8px; /* Matches your inputs/buttons */
+  background-color: #ffffff;
+  cursor: pointer;
+  font-weight: 600; /* Matches your buttons */
+  color: #374151;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 0.8rem; /* Matches your small buttons */
+  font-family: 'Montserrat', sans-serif;
+}
+
+.paginationButton:hover {
+  background-color: #f3f4f6; /* Matches your hover states */
+}
+
+.paginationButton:disabled {
+  background-color: #f3f4f6; /* Matches your hover states */
+  color: #9ca3af; /* Gray-400 */
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+/* --- Add to settings.module.css --- */
+
+.successText {
+  font-size: 0.8rem;
+  color: #10b981; /* Green */
+  text-align: left;
+  margin: 0.5rem 0 0 0;
+}
+
+.dangerZone {
+  border: 1px solid #ef4444; /* Red border */
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  background-color: #fef2f2; /* Light red background */
+}
+
+.dangerZone .cardTitle {
+  color: #b91c1c; /* Dark Red */
+  border-bottom-color: #fecaca; /* Light Red */
+}
+
+.dangerZone p {
+  font-size: 0.9rem;
+  color: #991b1b; /* Medium Red */
+  margin: 0 0 1rem 0;
+}

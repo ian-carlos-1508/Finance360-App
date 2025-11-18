@@ -1,0 +1,112 @@
+/* Replace file: src/components/Tooltip/TooltipInfo.module.css */
+
+.tooltipContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af; /* gray-400 */
+  cursor: help;
+}
+
+.tooltipText {
+  visibility: hidden;
+  width: 280px;
+  background-color: #1f2937; /* gray-800 */
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px 12px;
+  position: absolute;
+  z-index: 10;
+  bottom: 150%; 
+  left: 50%;
+  /* Use transform for centering */
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Arrow */
+.tooltipText::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1f2937 transparent transparent transparent;
+}
+
+.tooltipContainer:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* --- NEW: 'Align Right' styles for tooltips on the right edge --- */
+.alignRight .tooltipText {
+  left: auto;
+  right: 0;
+  transform: translateX(0); /* No horizontal transform */
+}
+
+.alignRight .tooltipText::after {
+  left: auto;
+  right: 8px; /* Position arrow on the right side */
+  transform: translateX(0);
+}
+
+
+/* --- Styles for structured tooltips --- */
+.tooltipLabel {
+  font-weight: 700;
+  color: #9ca3af; /* Lighter gray */
+  display: block;
+  margin-top: 8px;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+}
+.tooltipLabel:first-child {
+  margin-top: 0;
+}
+
+.tooltipContent {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px; /* Space before next label */
+}
+
+.formula {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  background-color: #374151;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: block;
+  margin: 4px 0 8px 0;
+  text-align: center;
+}
+
+.tooltipCalc {
+  display: block;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+.tooltipCalc strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.tooltipBenchmark {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a5f3fc; /* Light cyan for pop */
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #374151; /* Separator line */
+}

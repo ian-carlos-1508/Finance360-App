@@ -1,0 +1,111 @@
+/* Replace file: src/pages/Income/AllIncome.module.css */
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+.backLink {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.backLink:hover {
+  background-color: #e5e7eb;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 0.4rem 1rem;
+  text-align: left;
+  /* --- THIS IS THE CHANGE --- */
+  font-size: 0.7rem; /* Was 0.8rem */
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.table td {
+  color: #111827;
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pageInfo {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.pageButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pageButton {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,108 @@
+/* src/pages/Auth.module.css */
+/* These styles are shared by Login and Signup */
+
+.authPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f3f4f6; /* Light gray background */
+}
+
+.authContainer {
+  background: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #e5e7eb;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  /* UPDATED: Font size reduced */
+  font-size: 1.6rem; /* Was 1.8rem (16px now) */
+  font-weight: 700;
+  color: #111827;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 1rem; /* 10px */
+  font-weight: 600;
+  color: #374151;
+}
+
+.input {
+  /* UPDATED: Font size reduced */
+  font-size: 1.1rem; /* Was 1.2rem (11px now) */
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.button {
+  /* UPDATED: Font size reduced */
+  font-size: 1.1rem; /* Was 1.2rem (11px now) */
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #3b82f6; /* Blue accent */
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #2563eb;
+}
+
+.footerText {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1rem; /* 10px */
+  color: #6b7280;
+}
+
+.footerLink {
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* For showing auth errors */
+.errorText {
+  color: #ef4444; /* Red */
+  font-size: 1rem;
+  text-align: center;
+}

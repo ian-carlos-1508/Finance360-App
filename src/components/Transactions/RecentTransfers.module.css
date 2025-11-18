@@ -1,0 +1,96 @@
+/* Replace file: src/components/Transactions/RecentTransfers.module.css */
+
+.listWrapper {
+  width: 100%;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem;
+  border-bottom: 1px solid #e5e7eb; /* gray-200 */
+}
+.listItem:last-child {
+  border-bottom: none;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  background-color: #f3f4f6; /* gray-100 */
+  color: #4b5563; /* gray-600 */
+}
+
+.details {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.description {
+  /* --- FONT FIX --- */
+  font-weight: 600;
+  font-size: 0.8rem; /* Set to 0.8rem */
+  color: #1f2937; /* gray-800 */
+  margin: 0 0 0.1rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  /* --- FONT FIX --- */
+  font-size: 0.7rem; /* Set to 0.7rem */
+  font-weight: 400;
+  color: #6b7280; /* gray-500 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amount {
+  /* --- FONT FIX --- */
+  font-weight: 600;
+  font-size: 0.7rem; /* Set to 0.8rem */
+  white-space: nowrap;
+  text-align: right;
+  color: #1f2937; /* gray-800 */
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.emptyItem {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  color: #6b7280; /* gray-500 */
+}
+
+.viewAllLink {
+  display: block;
+  text-align: right;
+  padding: 0.75rem 0.5rem 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3b82f6; /* blue-500 */
+  text-decoration: none;
+}
+.viewAllLink:hover {
+  text-decoration: underline;
+}

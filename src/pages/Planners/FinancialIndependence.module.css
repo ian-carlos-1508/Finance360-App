@@ -1,0 +1,128 @@
+/* Replace file: src/pages/Planners/FinancialIndependence.module.css */
+
+.pageHeader {
+  composes: listHeader from '../Settings/Settings.module.css';
+  margin-bottom: 2rem;
+}
+
+.title {
+  composes: title from '../Settings/Settings.module.css';
+  margin-bottom: 0;
+}
+
+.backButton {
+  composes: cancelButton from '../Settings/Settings.module.css';
+  text-decoration: none;
+}
+
+.calculatorGrid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+}
+
+.inputCard {
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resultsCard {
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  composes: label from '../Settings/Settings.module.css';
+  margin-bottom: 0;
+}
+
+.input {
+  composes: input from '../Settings/Settings.module.css';
+  width: 100%;
+}
+
+.inputGroup {
+  position: relative;
+}
+.inputAddonSymbol {
+  position: absolute;
+  top: 0;
+  left: 0.75rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  pointer-events: none;
+}
+.inputWithAddon {
+  composes: input;
+  padding-left: 1.8rem;
+}
+
+.labelWithIcon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+/* --- THIS IS THE FIX --- */
+.tooltipContent {
+  /* 1. Make the inside white */
+  background: #ffffff;
+  
+  /* 2. Set font size to 0.7rem */
+  font-size: 0.7rem; 
+  color: #374151; /* gray-700 */
+  padding: 0.25rem; /* Add a little space */
+}
+.tooltipContent strong {
+  color: #111827; /* gray-900 */
+  font-weight: 600;
+}
+/* --- END OF FIX --- */
+
+
+/* --- KPI Grid --- */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  composes: kpiCard from '../Settings/Settings.module.css';
+  text-align: center;
+  min-height: 0; /* Override default */
+}
+
+.kpiTitle {
+  composes: kpiTitle from '../Settings/Settings.module.css';
+  text-align: center;
+}
+
+.kpiValue {
+  composes: kpiValue from '../Settings/Settings.module.css';
+  font-size: 2.25rem; /* Make it large */
+  text-align: center;
+}
+
+.chartContainer {
+  height: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .calculatorGrid {
+    grid-template-columns: 1fr;
+  }
+}

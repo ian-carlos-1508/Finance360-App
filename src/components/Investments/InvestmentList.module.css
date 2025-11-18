@@ -1,0 +1,54 @@
+/* Replace file: src/components/Investments/InvestmentList.module.css */
+/* This is a new, dedicated table style for our portfolio */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling on small screens */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem; /* <<< FIX: Was 0.9rem */
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.7rem; /* 7px */
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.table td {
+  color: #111827;
+}
+
+/* Alignment for numbers */
+.table th.right,
+.table td.right {
+  text-align: right;
+}
+
+/* Colors for P/L */
+.positive {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.negative {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

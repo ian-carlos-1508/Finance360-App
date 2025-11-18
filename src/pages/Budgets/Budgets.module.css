@@ -1,0 +1,75 @@
+/* Replace file: src/pages/Budgets/Budgets.module.css */
+
+/* --- Progress Bar Styles --- */
+.budgetList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem; /* Space between each budget item */
+}
+
+.budgetItem {
+  font-size: 0.75rem;
+}
+
+.budgetName {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.budgetAmount {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.budgetAmount strong {
+  color: #111827;
+}
+
+.progressBarContainer {
+  width: 100%;
+  height: 12px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #42A5F5; /* UPDATED: Was #3b82f6 (harsh blue) */
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* NEW: Color for over-budget */
+.progressBar.overBudget {
+  background-color: #ef4444; /* Red */
+}
+
+/* --- NEW: Progress Bar Color States --- */
+.progressBar.warning {
+  background-color: #FFA726; /* UPDATED: Was #f59e0b (harsh yellow) */
+}
+.progressBar.atRisk {
+  background-color: #ef4444; /* Red (This stays the same, it's semantic) */
+}
+/* --- End New --- */
+
+.budgetActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.rolloverText {
+  font-size: 0.65rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  font-style: italic;
+}

@@ -1,0 +1,69 @@
+/* Create file: src/pages/Planners/RealEstateCalculator.module.css */
+
+.pageHeader {
+  composes: listHeader from '../Settings/Settings.module.css';
+  margin-bottom: 2rem;
+}
+
+.title {
+  composes: title from '../Settings/Settings.module.css';
+  margin-bottom: 0;
+}
+
+.backButton {
+  composes: cancelButton from '../Settings/Settings.module.css';
+  text-decoration: none;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  composes: kpiCard from '../Settings/Settings.module.css';
+  text-align: center;
+}
+
+.kpiTitle {
+  composes: kpiTitle from '../Settings/Settings.module.css';
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.kpiValue {
+  composes: kpiValue from '../Settings/Settings.module.css';
+  font-size: 2rem;
+  text-align: center;
+}
+
+.inputsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.inputCard {
+  composes: card from '../Settings/Settings.module.css';
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  composes: label from '../Settings/Settings.module.css';
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  composes: input from '../Settings/Settings.module.css';
+  width: 100%;
+}

@@ -1,0 +1,114 @@
+/* Replace file: src/pages/Planners/DebtPaydownPlanner.module.css */
+
+.plannerHeader {
+  composes: listHeader from "../Settings/Settings.module.css";
+  margin-bottom: 2rem;
+}
+
+.title {
+  composes: title from "../Settings/Settings.module.css";
+  margin-bottom: 0;
+}
+
+/* --- Controls Section --- */
+.controls {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.label {
+  composes: label from "../Settings/Settings.module.css";
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.input {
+  composes: input from "../Settings/Settings.module.css";
+  width: 150px;
+}
+
+.toggleGroup {
+  composes: filterGroup from "../Settings/Settings.module.css";
+  margin-bottom: 0;
+}
+.toggleButton {
+  composes: filterButton from "../Settings/Settings.module.css";
+}
+.toggleButtonActive {
+  composes: filterButtonActive from "../Settings/Settings.module.css";
+}
+
+/* --- KPI Grid --- */
+.kpiGrid {
+  composes: kpiSection from "../Settings/Settings.module.css";
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  composes: kpiCard from "../Settings/Settings.module.css";
+}
+
+.kpiTitle {
+  composes: kpiTitle from "../Settings/Settings.module.css";
+}
+
+.kpiValue {
+  composes: kpiValue from "../Settings/Settings.module.css";
+}
+
+/* --- Payoff List --- */
+.payoffList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.debtCard {
+  composes: card from "../Settings/Settings.module.css";
+}
+
+.debtHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.debtName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.debtInfo {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.debtSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.summaryStat h4 {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.summaryStat p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}

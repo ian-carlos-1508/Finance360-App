@@ -1,0 +1,148 @@
+/* Create file: src/pages/Goals/Goals.module.css */
+
+/* --- KPI Grid --- */
+.kpiGrid {
+  composes: kpiSection from "../Settings/Settings.module.css";
+  margin-bottom: 2rem;
+}
+
+.kpiCard {
+  composes: kpiCard from "../Settings/Settings.module.css";
+}
+
+.kpiTitle {
+  composes: kpiTitle from "../Settings/Settings.module.css";
+}
+
+.kpiValue {
+  composes: kpiValue from "../Settings/Settings.module.css";
+}
+
+/* --- Goal Card Grid --- */
+.goalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.goalCard {
+  composes: card from "../Settings/Settings.module.css";
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.goalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.goalName {
+  font-size: 1.0rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.goalName svg {
+  font-size: 1.0rem;
+  color: #3b82f6; /* Blue icon */
+}
+
+.goalActions {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: -0.25rem; /* Pull up to align */
+}
+
+.goalDate {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.goalProgress {
+  margin-top: auto; /* Pushes progress bar to the bottom */
+  padding-top: 1rem;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.currentAmount {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #10b981; /* Green */
+}
+
+.targetAmount {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.progressBarContainer {
+  width: 100%;
+  height: 12px;
+  background-color: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #10b981; /* Green */
+  border-radius: 99px;
+  transition: width 0.5s ease-out;
+}
+
+.progressPercent {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+.addGoalCard {
+  composes: goalCard;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d1d5db;
+  cursor: pointer;
+  min-height: 220px; /* Match height of other cards */
+  transition: all 0.2s ease;
+}
+
+.addGoalCard:hover {
+  background-color: #f9fafb;
+  border-color: #3b82f6;
+}
+
+.addGoalContent {
+  text-align: center;
+  color: #6b7280;
+}
+
+.addGoalContent svg {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.addGoalContent p {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
