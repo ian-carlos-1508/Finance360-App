@@ -64,8 +64,8 @@ function FinancialIndependence() {
         setLiveData(data);
         setCurrentPortfolio(Math.round(data.current_investments).toString());
         
-        // Set the monthly expenses from the fetched data
-        setMonthlyExpenses(Math.round(data.avg_monthly_expenses).toString());
+        // --- FIX: Use Math.abs() to handle negative expense data ---
+        setMonthlyExpenses(Math.round(Math.abs(data.avg_monthly_expenses)).toString());
       }
     }
     fetchFIData();
@@ -93,10 +93,17 @@ function FinancialIndependence() {
       fiTarget: fiNumber,
     });
     
+    // Safety check to prevent infinite loops or bad charts
     if (fiNumber <= 0) {
-      return { fiNumber, yearsToFI: 0, chartData: data };
+      return { fiNumber: 0, yearsToFI: 0, chartData: [] };
     }
+    
+    // If already reached FI
     if (currentValue >= fiNumber) {
+      // Just show a flat line for a few years to visualize
+      for(let i=1; i<=5; i++) {
+          data.push({ year: i, value: currentValue, fiTarget: fiNumber });
+      }
       return { fiNumber, yearsToFI: 0, chartData: data };
     }
     
@@ -144,7 +151,7 @@ function FinancialIndependence() {
                   <div className={styles.tooltipContent}>
                     Your 6-month average expense is{' '}
                     <strong>
-                      {formatCurrency(liveData.avg_monthly_expenses)}
+                      {formatCurrency(Math.abs(liveData.avg_monthly_expenses))}
                     </strong>
                     .
                   </div>
@@ -172,12 +179,10 @@ function FinancialIndependence() {
               </label>
               {liveData && (
                 <TooltipInfo>
-                  {/* --- THIS IS THE FIX --- */}
                   <div className={styles.tooltipContent}>
                     This is your total cash (from 'cash' accounts)
                     and investments (from your portfolio).
                   </div>
-                  {/* --- END OF FIX --- */}
                 </TooltipInfo>
               )}
             </div>
@@ -236,7 +241,11 @@ function FinancialIndependence() {
             <div className={styles.kpiCard}>
               <h3 className={styles.kpiTitle}>Estimated Years to FI</h3>
               <p className={styles.kpiValue}>
-                {yearsToFI < 60 ? yearsToFI : '60+'}
+                {yearsToFI === 0 && fiNumber > 0 && parseFloat(currentPortfolio) >= fiNumber 
+                    ? 'Achieved!' 
+                    : yearsToFI < 60 
+                        ? yearsToFI 
+                        : '60+'}
               </p>
             </div>
           </div>
@@ -252,7 +261,7 @@ function FinancialIndependence() {
                     offset: -5,
                   }}
                 />
-                <YAxis tickFormatter={(val) => formatCurrency(val)} />
+                <YAxis tickFormatter={(val) => formatCurrency(val)} width={80} />
                 <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
                   labelFormatter={(label) => `Year ${label}`}
