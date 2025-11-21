@@ -5,6 +5,8 @@ import styles from './FinancialHealth.module.css';
 import { supabase } from '../../lib/supabaseClient';
 import { formatCurrency } from '../../lib/utils';
 import TooltipInfo from '../../components/Tooltip/TooltipInfo';
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub'; 
 import {
   ResponsiveContainer,
   PieChart,
@@ -129,6 +131,42 @@ const ASSET_PIE_COLORS = [
 ];
 // --- END UPDATES ---
 
+// --- STATUS HELPER FUNCTIONS (Restored to fix errors) ---
+
+const getSavingsRateStatus = (rate: number): KpiCardProps['status'] => {
+  if (rate >= 0.2) return 'good';
+  if (rate >= 0.1) return 'warning';
+  return 'bad';
+};
+
+const getDtiStatus = (ratio: number): KpiCardProps['status'] => {
+  if (ratio <= 0.36) return 'good';
+  if (ratio <= 0.43) return 'warning';
+  return 'bad';
+};
+
+const getEmergencyFundStatus = (months: number): KpiCardProps['status'] => {
+  if (months >= 6) return 'good';
+  if (months >= 3) return 'warning';
+  return 'bad';
+};
+
+const getDebtToAssetStatus = (ratio: number): KpiCardProps['status'] => {
+  const positiveRatio = Math.abs(ratio);
+  if (positiveRatio <= 0.4) return 'good';
+  if (positiveRatio <= 0.6) return 'warning';
+  return 'bad';
+};
+
+const getCurrentRatioStatus = (ratio: number): KpiCardProps['status'] => {
+  if (ratio >= 2) return 'good';
+  if (ratio >= 1) return 'warning';
+  return 'bad';
+};
+
+// --- END STATUS HELPER FUNCTIONS ---
+
+
 // --- Helper Components ---
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
@@ -189,10 +227,11 @@ const calculateHealthScore = (data: HealthData) => {
   const solvencyMaxRatio = 1.0;
   
   /* --- BUG 1 FIX: Use Math.abs() ---
-     The original 'data.debt_to_asset_ratio' could be negative,
-     which breaks the score calculation below (e.g., 100 - (negative num) > 100).
-     We use Math.abs() to ensure the ratio is always positive.
-  --- */
+   * The original 'data.debt_to_asset_ratio' could be negative,
+   * which breaks the score calculation below (e.g., 100 - (negative num) > 100).
+   * We use Math.abs() to ensure the ratio is always positive.
+   * ---
+   */
   const actualRatio = Math.abs(data.debt_to_asset_ratio || 0);
 
   let solvencyScore;
@@ -293,40 +332,7 @@ function FinancialHealth() {
     return calculateHealthScore(data);
   }, [data]);
 
-  // --- Helper Functions for Status & Data ---
-  const getSavingsRateStatus = (rate: number): KpiCardProps['status'] => {
-    if (rate >= 0.2) return 'good';
-    if (rate >= 0.1) return 'warning';
-    return 'bad';
-  };
-
-  const getDtiStatus = (ratio: number): KpiCardProps['status'] => {
-    if (ratio <= 0.36) return 'good';
-    if (ratio <= 0.43) return 'warning';
-    return 'bad';
-  };
-
-  const getEmergencyFundStatus = (months: number): KpiCardProps['status'] => {
-    if (months >= 6) return 'good';
-    if (months >= 3) return 'warning';
-    return 'bad';
-  };
-
-  const getDebtToAssetStatus = (ratio: number): KpiCardProps['status'] => {
-    // --- BUG 1 FIX (Propagated): Use Math.abs() here too for status colors ---
-    const positiveRatio = Math.abs(ratio);
-    if (positiveRatio <= 0.4) return 'good';
-    if (positiveRatio <= 0.6) return 'warning';
-    return 'bad';
-  };
-
-  const getCurrentRatioStatus = (ratio: number): KpiCardProps['status'] => {
-    if (ratio >= 2) return 'good';
-    if (ratio >= 1) return 'warning';
-    return 'bad';
-  };
-
-  // --- CHART DATA ---
+  // --- CHART DATA (omitted for brevity) ---
   const budgetPieData = [
     { name: 'Needs', value: data?.needs_pct || 0 },
     { name: 'Wants', value: data?.wants_pct || 0 },
@@ -367,6 +373,9 @@ function FinancialHealth() {
   // --- RENDER ---
   return (
     <div>
+      {/* NEW: Back to Hub Navigation */}
+      <BackToHub to="/build" label="Back to Fortress Dashboard" />
+      
       <h1 className={styles.title}>Financial Health</h1>
 
       {/* --- Date Filters --- */}
@@ -551,7 +560,6 @@ function FinancialHealth() {
                 Liquid Assets: <strong>{formatCurrency(data.total_liquid_assets)}</strong>
               </div>
               <div className={styles.tooltipCalc}>
-                {/* --- BUG 2 CONTEXT FIX: Use Math.abs() for display --- */}
                 Credit Liabilities: <strong>{formatCurrency(Math.abs(data.total_credit_liabilities))}</strong>
               </div>
               <div className={styles.tooltipCalc}>
@@ -631,14 +639,12 @@ function FinancialHealth() {
               </span>
               <div className={styles.tooltipLabel}>Your Calculation:</div>
               <div className={styles.tooltipCalc}>
-                {/* --- BUG 2 CONTEXT FIX: Use Math.abs() for tooltip display --- */}
                 Total Liabilities: <strong>{formatCurrency(Math.abs(data.total_liabilities))}</strong>
               </div>
               <div className={styles.tooltipCalc}>
                 Total Assets: <strong>{formatCurrency(data.total_assets)}</strong>
               </div>
               <div className={styles.tooltipCalc}>
-                {/* --- BUG 2 CONTEXT FIX: Use Math.abs() for tooltip display --- */}
                 Ratio: <strong>{formatPercent(Math.abs(data.debt_to_asset_ratio || 0))}</strong>
               </div>
               <div className={styles.tooltipBenchmark}>
@@ -679,7 +685,6 @@ function FinancialHealth() {
                 Total Assets: <strong>{formatCurrency(data.total_assets)}</strong>
               </div>
               <div className={styles.tooltipCalc}>
-                {/* --- BUG 2 CONTEXT FIX: Use Math.abs() for tooltip display --- */}
                 Total Liabilities: <strong>{formatCurrency(Math.abs(data.total_liabilities))}</strong>
               </div>
               <div className={styles.tooltipCalc}>
@@ -736,7 +741,6 @@ function FinancialHealth() {
                 What percentage of your net worth is in assets that grow
                 (investments) vs. sit (cash).
               </div>
-              {/* --- TYPO FIX: Replaced [ with { --- */}
               <div className={styles.tooltipLabel}>Formula:</div>
               <div className={styles.formula}>
                 Total Invested Assets / Total Net Worth
@@ -785,7 +789,6 @@ function FinancialHealth() {
                   outerRadius={80}
                   label={(entry: any) => formatPercent(entry.value)}
                 >
-                  {/* --- UPDATED: Use new semantic colors --- */}
                   {budgetPieData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
@@ -800,7 +803,6 @@ function FinancialHealth() {
           </div>
         </div>
 
-        {/* --- NEW 3RD CHART --- */}
         <div className={styles.chartCard}>
           <h2 className={styles.cardTitle}>
             Expense Breakdown (Needs vs. Wants)
@@ -817,13 +819,10 @@ function FinancialHealth() {
                   outerRadius={80}
                   label={(entry: any) => formatPercent(entry.percent)}
                 >
-                  {/* --- UPDATED: Use new semantic colors --- */}
                   {expensePieData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={
-                        EXPENSE_PIE_COLORS[index % EXPENSE_PIE_COLORS.length]
-                      }
+                      fill={EXPENSE_PIE_COLORS[index % EXPENSE_PIE_COLORS.length]}
                     />
                   ))}
                 </Pie>
@@ -850,7 +849,6 @@ function FinancialHealth() {
                   outerRadius={80}
                   label={(entry: any) => formatPercent(entry.percent)}
                 >
-                  {/* --- UPDATED: Use new semantic colors --- */}
                   {assetPieData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}

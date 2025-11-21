@@ -1,4 +1,4 @@
-/* src/components/Sidebar/NextActionIndexCard.module.css */
+/* File: src/components/Sidebar/NextActionIndexCard.module.css */
 
 .cardContainer {
   display: block !important;
@@ -43,8 +43,8 @@
 .iconBox {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: white;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@
 }
 
 .title {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #1e293b; /* Slate-800 */
   line-height: 1.2;

@@ -9,18 +9,18 @@ import sharedStyles from '../Settings/Settings.module.css';
 import type { HealthData } from '../../types/financial';
 
 // --- UPDATED: Centralized Theme Colors ---
-import { COLOR_INCOME, COLOR_EXPENSE } from '../../lib/chartColors';
+import { COLOR_INCOME, COLOR_EXPENSE, COLOR_TRANSFER } from '../../lib/chartColors'; // Added COLOR_TRANSFER for Subscriptions
 
 import { 
   HiShieldCheck, 
   HiFire, 
   HiArrowRight,
   HiHeart,
-  HiLightningBolt
+  HiLightningBolt,
+  HiCalendar // NEW: Import HiCalendar for Subscriptions
 } from 'react-icons/hi';
 
-// --- SVG SHIELD COMPONENT ---
-// Uses COLOR_INCOME for the fill to match the "Safe/Green" theme
+// --- SVG SHIELD COMPONENT (omitted for brevity, assume unchanged) ---
 const ShieldIcon = ({ percent }: { percent: number }) => {
   const fill = Math.min(Math.max(percent, 0), 100);
   
@@ -91,15 +91,27 @@ const BuildHub: React.FC = () => {
   // Boss Logic
   const isDebtFree = totalDebt === 0;
 
-  // Resilience Score
+  // Resilience Score Logic
   const liquidityScore = Math.min(monthsOfSafety / 3, 1) * 50; 
   const debtScore = totalDebt === 0 ? 50 : Math.max(0, 50 - (totalDebt / 1000)); 
   const resilienceScore = Math.round(liquidityScore + debtScore);
 
+  // --- DYNAMIC STATUS COLORS ---
   let statusIcon = '⛈️';
   let statusText = 'Fortress Breached';
-  if (resilienceScore > 80) { statusIcon = '🏰'; statusText = 'Fortress Secure'; }
-  else if (resilienceScore > 50) { statusIcon = '🚧'; statusText = 'Under Construction'; }
+  
+  let bgGradient = `linear-gradient(135deg, ${COLOR_EXPENSE} 0%, #7f1d1d 100%)`;
+
+  if (resilienceScore >= 80) {
+    statusIcon = '🏰'; 
+    statusText = 'Fortress Secure';
+    bgGradient = `linear-gradient(135deg, ${COLOR_INCOME} 0%, #14532d 100%)`;
+  } 
+  else if (resilienceScore >= 50) {
+    statusIcon = '🚧'; 
+    statusText = 'Under Construction';
+    bgGradient = `linear-gradient(135deg, #f59e0b 0%, #b45309 100%)`;
+  }
 
   return (
     <div className={styles.container}>
@@ -114,7 +126,7 @@ const BuildHub: React.FC = () => {
         
         {/* LEFT: THE SHIELD */}
         <div className={styles.battleCard}>
-          <div className={styles.cardHeader} style={{ color: COLOR_INCOME }}>
+          <div className={`${styles.cardHeader} ${styles.shieldHeader}`} style={{ color: COLOR_INCOME }}>
              Defensive Shield
           </div>
           
@@ -136,7 +148,7 @@ const BuildHub: React.FC = () => {
 
         {/* RIGHT: THE BOSS */}
         <div className={styles.battleCard}>
-          <div className={styles.cardHeader} style={{ color: COLOR_EXPENSE }}>
+          <div className={`${styles.cardHeader} ${styles.bossHeader}`} style={{ color: COLOR_EXPENSE }}>
              Active Threat
           </div>
 
@@ -146,7 +158,7 @@ const BuildHub: React.FC = () => {
                 {isDebtFree ? '💀' : '👹'}
              </div>
              
-             {/* Health Bar (Using COLOR_EXPENSE for consistent Red) */}
+             {/* Health Bar */}
              {!isDebtFree ? (
                <div className={styles.healthBarContainer} style={{ borderColor: COLOR_EXPENSE, backgroundColor: `${COLOR_EXPENSE}20` }}>
                   <div 
@@ -179,7 +191,7 @@ const BuildHub: React.FC = () => {
       </div>
 
       {/* --- SECTION 2: RESILIENCE SCORE --- */}
-      <div className={styles.resilienceSection}>
+      <div className={styles.resilienceSection} style={{ background: bgGradient }}>
          <div>
             <div className={styles.resTitle}>{statusIcon} System Resilience</div>
             <div className={styles.resDesc}>
@@ -216,6 +228,18 @@ const BuildHub: React.FC = () => {
             <div className={styles.navContent}>
               <div className={styles.navTitle}>Savings Goals</div>
               <div className={styles.navSubtitle}>Allocate cash to specific buckets.</div>
+            </div>
+            <HiArrowRight className={styles.arrowIcon} />
+          </Link>
+
+          {/* NEW CARD: Subscriptions Audit */}
+          <Link to="/subscriptions" className={styles.navCard}>
+            <div className={styles.navIconBox} style={{backgroundColor: '#e0e7ff', color: COLOR_TRANSFER}}>
+              <HiCalendar />
+            </div>
+            <div className={styles.navContent}>
+              <div className={styles.navTitle}>Subscription Audit</div>
+              <div className={styles.navSubtitle}>Manage recurring charges and identify waste.</div>
             </div>
             <HiArrowRight className={styles.arrowIcon} />
           </Link>

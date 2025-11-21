@@ -6,71 +6,124 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background-color: #FAFAFA;
+  background-color: #F9FAFB;
   border-right: 1px solid #E5E7EB;
 }
 
-/* --- BRAND HEADER (Restored V1 Style) --- */
+/* --- BRAND HEADER (Container) --- */
 .brandHeader {
-  height: 64px; /* Standard Navbar height */
+  padding: 1rem 1.5rem 0.5rem 1.5rem; 
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
-/* Center the icon when collapsed */
 .brandHeaderCollapsed {
   composes: brandHeader;
-  padding: 0;
+  padding: 1rem 0;
   justify-content: center;
 }
 
+/* Base App Icon (Blue Fire) */
 .brandIcon {
-  font-size: 1.5rem;
-  color: #2563EB; /* Blue-600 */
+  font-size: 1.75rem;
+  color: #2563EB;
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(37, 99, 235, 0.2));
+  filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+  transition: color 0.3s ease;
 }
 
+/* --- BRAND TITLE POLISH --- */
 .brandTitle {
-  margin-left: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 800; /* Extra Bold */
-  color: #111827;   /* Gray-900 */
+  display: flex;
+  align-items: flex-end; 
+  font-weight: 800;
   letter-spacing: -0.025em;
   white-space: nowrap;
-  opacity: 1;
-  transition: opacity 0.2s;
+  margin-left: 0.75rem;
+}
+.brandTextFinance {
+    font-size: 1.25rem;
+    color: #111827; 
+    font-weight: 800;
+}
+.brandText360 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-left: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+    
+    /* FIX: Added standard background-clip property for compatibility */
+    -webkit-background-clip: text;
+    background-clip: text; 
+    
+    -webkit-text-fill-color: transparent;
+    color: #3b82f6; /* Fallback color */
 }
 
-/* --- PLAYER CARD (Gamification) --- */
+
+/* --- STREAK BADGE & TEXT POLISH --- */
+.streakWrapper {
+    /* Container for XP/Streak display */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid #E5E7EB;
+    min-width: 65px;
+    color: #9CA3AF;
+}
+
+.streakIconActive {
+    color: #f97316;
+    filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.3));
+}
+
+.streakValue {
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+    color: #f97316;
+    text-shadow: 0 0 4px rgba(249, 115, 22, 0.3);
+}
+
+.streakStatusText {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    line-height: 1;
+}
+
+/* --- PLAYER CARD --- */
 .playerCard {
   margin: 0 1rem 1rem 1rem;
   padding: 0.75rem;
-  background-color: #EFF6FF; /* Blue-50 */
-  border: 1px solid #DBEAFE; /* Blue-100 */
-  border-radius: 0.75rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .levelBadge {
-  width: 36px;
-  height: 36px;
-  background-color: #2563EB;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
   color: white;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
   flex-shrink: 0;
+  position: relative;
 }
 
 .xpInfo {
@@ -79,195 +132,132 @@
   justify-content: center;
   line-height: 1.1;
   overflow: hidden;
+  flex: 1;
 }
 
 .xpLabel {
-  font-size: 0.65rem; /* Matches your 0.6rem request */
+  font-size: 0.65rem; 
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: #60A5FA; /* Blue-400 */
-  margin-bottom: 2px;
+  color: #9CA3AF; 
 }
 
 .xpValue {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #1E40AF; /* Blue-800 */
-  white-space: nowrap;
+  color: #1F2937; 
 }
 
-/* --- SCROLL AREA --- */
-.scrollArea {
+/* --- NAVIGATION AREA (Section 4) --- */
+.navArea {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 1rem;
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
-}
-
-/* Hide scrollbar for Chrome/Safari/Opera but keep functionality */
-.scrollArea::-webkit-scrollbar {
-  width: 4px;
-}
-.scrollArea::-webkit-scrollbar-track {
-  background: transparent;
-}
-.scrollArea::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 10px;
-}
-
-/* --- ACCORDION ITEMS --- */
-.accordionItem {
+  padding: 0 1rem 1rem 1rem; 
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin-bottom: 0.25rem;
+  gap: 0.75rem; 
 }
 
-.lockedItem {
+/* --- LEVEL CARDS (Base Style) --- */
+.levelCard {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.levelCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-color: #BFDBFE;
+}
+
+/* Base Active/Locked Styles */
+.levelCardActive {
+  composes: levelCard;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+.levelCardLocked {
+  composes: levelCard;
   opacity: 0.6;
-  pointer-events: none;
+  background-color: #F9FAFB;
+  border-color: #E5E7EB;
+  cursor: not-allowed;
   filter: grayscale(100%);
 }
 
-/* --- STEP HEADER --- */
-.stepHeader {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  transition: background-color 0.2s ease;
+/* --- THEMATIC ACTIVE STYLES (Restored Unique Colors) --- */
+.levelCardControlActive {
+    composes: levelCardActive;
+    border-color: #2563EB; /* Blue */
+    background-color: #EFF6FF; /* Light Blue */
+}
+.levelCardBuildActive {
+    composes: levelCardActive;
+    border-color: #059669; /* Green */
+    background-color: #ECFDF5; /* Light Green */
+}
+.levelCardOptimizeActive {
+    composes: levelCardActive;
+    border-color: #D97706; /* Amber */
+    background-color: #FFFBEB; /* Light Amber */
 }
 
-.stepHeader:hover {
-  background-color: #F3F4F6;
-}
-
-.stepTopRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.stepTitleGroup {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.stepTitle {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #4b5563;
-}
-
-.activeStepTitle {
-  color: #111827;
-  font-weight: 700;
-}
-
-.stepIconWrapper {
-  width: 28px;
-  height: 28px;
+/* Icon Box and Text Styles (Omitted for brevity, assumed unchanged) */
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  background-color: #f3f4f6;
-  color: #9ca3af;
-  font-size: 14px;
-  transition: all 0.3s;
+  font-size: 1.0rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
 }
 
-/* --- PROGRESS BAR --- */
-.progressBarContainer {
-  width: 100%;
-  height: 3px;
-  background-color: #e5e7eb;
-  border-radius: 99px;
-  overflow: hidden;
-  margin-top: 2px;
-}
-
-.progressBarFill {
-  height: 100%;
-  border-radius: 99px;
-  transition: width 0.8s ease-in-out;
-}
-
-/* --- TIMELINE & MODULES --- */
-.timelineContainer {
-  margin-left: 1.85rem;
-  border-left: 2px solid #E5E7EB;
-  padding-left: 0.75rem;
-  padding-bottom: 1rem;
-}
-
-.nav {
+.cardContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.15rem;
 }
 
-.navItem {
-  position: relative;
+.cardTitle {
   font-size: 0.8rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.cardSubtitle {
+  font-size: 0.7rem;
+  font-weight: 800;
   color: #6B7280;
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
 }
 
-.navItem::before {
-  content: '';
-  position: absolute;
-  left: -1.15rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #D1D5DB;
-  border: 2px solid #FAFAFA;
-  z-index: 10;
+.statusIcon {
+  color: #10B981;
+  font-size: 1.2rem;
 }
 
-.navItem:hover {
-  background-color: #F3F4F6;
-  color: #111827;
+.lockIcon {
+  color: #9CA3AF;
+  font-size: 1.2rem;
 }
 
-.navItem:hover::before {
-  background-color: #9CA3AF;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.activeNavItem {
-  background-color: #EFF6FF;
-  color: #2563EB;
-  font-weight: 600;
-}
-
-.activeNavItem::before {
-  background-color: #2563EB;
-  width: 10px;
-  height: 10px;
-  left: -1.2rem;
-}
-
-/* --- FOOTER --- */
 .footer {
   margin-top: auto;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #E5E7EB;
   padding: 1rem;
-  background-color: white;
+  background-color: #F9FAFB;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -280,14 +270,14 @@
   text-decoration: none;
   color: #4B5563;
   font-size: 0.85rem;
-  padding: 4px;
-  border-radius: 6px;
+  padding: 0.5rem;
+  border-radius: 8px;
   transition: background-color 0.2s;
-  width: 100%;
+  font-weight: 600;
 }
 
 .footerLink:hover {
-  background-color: #F3F4F6;
+  background-color: #E5E7EB;
   color: #111827;
 }
 
@@ -299,10 +289,11 @@
 
 .userName {
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #1F2937;
 }
 
 .userLabel {

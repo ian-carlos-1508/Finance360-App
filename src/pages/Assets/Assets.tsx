@@ -18,6 +18,8 @@ import RealEstateManager from '../../components/RealEstate/RealEstateManager';
 import DebtManager from '../../components/Debts/DebtManager';
 import CreditCardManager from '../../components/Accounts/CreditCardManager';
 import { formatCurrency } from '../../lib/utils';
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub'; 
 // --- NEW: Import the centralized colors ---
 import {
   CHART_COLORS,
@@ -185,6 +187,9 @@ function AssetsPage() {
 
   return (
     <div>
+      {/* NEW: Back to Hub Navigation (Optimize Hub) */}
+      <BackToHub to="/optimize" label="Back to Wealth HQ" />
+
       <h1 className={styles.title}>Assets & Liabilities</h1>
 
       <div className={styles.pageGrid}>

@@ -5,6 +5,8 @@ import styles from './InvestmentCalculator.module.css';
 import sharedStyles from '../Settings/Settings.module.css';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../../lib/utils';
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub';
 import {
   ResponsiveContainer,
   LineChart,
@@ -38,7 +40,7 @@ function InvestmentCalculator() {
 
   const { chartData, finalValue, totalPrincipal, totalInterest } =
     useMemo((): CalcResult => {
-      // ... (useMemo logic remains unchanged)
+      // --- Investment Calculation Logic ---
       const P = parseFloat(initialAmount) || 0;
       const PMT = parseFloat(monthlyContribution) || 0;
       const t = parseInt(years, 10) || 0;
@@ -88,9 +90,13 @@ function InvestmentCalculator() {
 
   return (
     <div>
+      {/* NEW: Back to Hub Navigation */}
+      <BackToHub to="/optimize" label="Back to Wealth HQ" />
+      
       <div className={styles.pageHeader}>
         <h1 className={styles.title}>Investment Calculator</h1>
-        <Link to="/planners" className={styles.backButton}>
+        {/* The original back button (now redundant) replaced by a clean link */}
+        <Link to="/planners" className={sharedStyles.cancelButton}>
           &larr; Back to Planners
         </Link>
       </div>

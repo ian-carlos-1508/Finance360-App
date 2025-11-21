@@ -41,7 +41,6 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  /* UPDATED: Reduced height to match Control Hub density */
   min-height: 280px; 
 }
 
@@ -50,7 +49,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 1rem; /* Tighter margin */
+  margin-bottom: 1rem; 
   z-index: 10;
 }
 
@@ -59,7 +58,6 @@
 
 /* --- THE SHIELD VISUALS (Compact) --- */
 .shieldWrapper {
-  /* UPDATED: Smaller Shield */
   width: 80px;
   height: 90px;
   margin-bottom: 1rem;
@@ -75,7 +73,7 @@
 .bossWrapper {
   width: 100%;
   max-width: 240px;
-  margin-bottom: 1rem; /* Tighter margin */
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,7 +81,6 @@
 }
 
 .bossAvatar {
-  /* UPDATED: Smaller Emoji */
   font-size: 3rem; 
   margin-bottom: 0.25rem;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
@@ -92,9 +89,9 @@
 
 .healthBarContainer {
   width: 100%;
-  height: 18px; /* Thinner bar */
+  height: 18px; 
   background-color: #fee2e2; 
-  border: 1px solid #ef4444; /* Thinner border */
+  border: 1px solid #ef4444; 
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -108,7 +105,6 @@
 
 /* --- METRICS & ACTIONS --- */
 .metricLarge {
-  /* UPDATED: Matches ControlHub HUD value size */
   font-size: 1.8rem; 
   font-weight: 800;
   color: #111827;
@@ -124,7 +120,7 @@
 
 .actionButton {
   margin-top: auto;
-  padding: 0.5rem 1rem; /* Slightly smaller button */
+  padding: 0.5rem 1rem; 
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.85rem;
@@ -153,7 +149,7 @@
 .resilienceSection {
   background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
   border-radius: 16px;
-  padding: 1.5rem; /* Reduced padding */
+  padding: 1.5rem; 
   color: white;
   display: flex;
   justify-content: space-between;
@@ -179,7 +175,7 @@
 }
 
 .resValue {
-  font-size: 2.2rem; /* Slightly smaller to match hierarchy */
+  font-size: 2.2rem; 
   font-weight: 800;
   line-height: 1;
 }
@@ -200,7 +196,7 @@
 }
 
 .sectionTitle {
-  font-size: 1.25rem; /* Consistent with ControlHub */
+  font-size: 1.25rem; 
   font-weight: 800;
   color: #1f2937;
   display: flex;
@@ -209,8 +205,9 @@
 }
 
 .navGrid {
+  /* FIXED: Reduced minmax from 300px to 240px to allow 4 cards in one row */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
   gap: 1.5rem;
 }
 
@@ -224,10 +221,12 @@
   gap: 1rem;
   text-decoration: none;
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .navCard:hover {
-  border-color: #4f46e5;
+  border-color: #4f46e5; 
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }

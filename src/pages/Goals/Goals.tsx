@@ -6,12 +6,14 @@ import sharedStyles from '../Settings/Settings.module.css';
 import { supabase } from '../../lib/supabaseClient';
 import { formatCurrency } from '../../lib/utils';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-// --- FIX: Correct icon imports ---
 import { HiBanknotes, HiShieldCheck } from 'react-icons/hi2';
 import { HiTrendingUp, HiFlag } from 'react-icons/hi';
 import Modal from '../../components/Modal/Modal';
-import AddGoalModal from './AddGoalModal'; // <-- FIX: Correct path
-import { type Goal } from './types'; // <-- FIX: Import from types.ts
+import AddGoalModal from './AddGoalModal'; 
+import { type Goal } from './types'; 
+
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub'; 
 
 // --- Goal Card Component ---
 interface GoalCardProps {
@@ -154,6 +156,9 @@ function GoalsPage() {
 
   return (
     <div>
+      {/* NEW: Back to Hub Navigation */}
+      <BackToHub to="/build" label="Back to Fortress Dashboard" />
+
       <div className={sharedStyles.listHeader}>
         <h1 className={sharedStyles.title} style={{ marginBottom: 0 }}>My Goals</h1>
         <button className={sharedStyles.addButton} onClick={handleOpenAddModal}>

@@ -6,7 +6,10 @@ import { supabase } from '../../lib/supabaseClient';
 import Modal from '../../components/Modal/Modal';
 import { type Account } from '../../components/Accounts/AddAccountForm';
 import { formatCurrency } from '../../lib/utils';
-import { type Goal } from './types'; // <-- FIX: Import from types.ts
+import { type Goal } from './types'; 
+
+// --- NEW: Gamification Import ---
+import { useGamificationToast } from '../../context/GamificationToastContext';
 
 // --- NEW Type Definitions ---
 type Debt = {
@@ -42,6 +45,9 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
   // App State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // --- NEW: Hook ---
+  const { showXpToast } = useGamificationToast();
 
   // Fetch data for dropdowns
   useEffect(() => {
@@ -143,6 +149,19 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
     if (dbError) {
       setError(dbError.message);
     } else {
+      // --- GAMIFICATION TRIGGER ---
+      const target = parseFloat(targetAmount);
+      const current = parseFloat(currentAmount); // Note: If linked, this is 0 here, handled by DB trigger usually.
+      // However, if manual update hits 100%, show toast.
+      
+      if (current >= target && linkedAccountId === 'manual') {
+         showXpToast(100, "GOAL CRUSHED! 🏆");
+      } else if (!goalToEdit) {
+         showXpToast(10, "Goal Set! 🎯");
+      } else {
+         // Silent update or minor feedback
+      }
+
       onSave(); // Trigger a data refresh on the main page
       handleClose();
     }
@@ -185,7 +204,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
         </select>
       );
     }
-    // Add 'Investment' case here when ready
     return (
       <select className={styles.input} disabled>
         <option>Select a goal type first</option>
@@ -223,7 +241,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
           >
             <option value="Savings">Savings Goal</option>
             <option value="Debt Payoff">Debt Payoff Goal</option>
-            {/* <option value="Investment">Investment Goal</option> */}
           </select>
         </div>
 

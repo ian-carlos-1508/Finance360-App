@@ -14,11 +14,11 @@ import {
 } from '../../lib/chartColors';
 
 import { 
-  HiCreditCard, 
   HiLightningBolt, 
   HiChartBar, 
   HiArrowRight,
-  HiExternalLink // Added for hover hint
+  HiExternalLink,
+  HiCreditCard
 } from 'react-icons/hi';
 
 interface ControlMetrics {
@@ -106,21 +106,36 @@ const ControlHub: React.FC = () => {
   const flowColor = isPositive ? COLOR_INCOME : COLOR_EXPENSE;
   const flowBgColor = isPositive ? `${COLOR_INCOME}15` : `${COLOR_EXPENSE}15`; 
 
+// --- GAUGE ROTATION & ZONES ---
   const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
-  const gaugeRotation = clamp(metrics.surplusRate * 1.8, -90, 90);
+  
+  // Mapping Logic:
+  // 0% Surplus (Spent everything) -> -90deg (Empty/Left)
+  // 50% Surplus (Saved half)     ->   0deg (Top/Middle)
+  // 100% Surplus (Spent nothing) ->  90deg (Full/Right)
+  // Formula: (Percent * 1.8) - 90
+  const gaugeRotation = clamp((metrics.surplusRate * 1.8) - 90, -90, 90);
 
   let gaugeText = 'Cruising Altitude';
   let gaugeStatusColor = COLOR_INCOME;
   let gaugeStatusBg = `${COLOR_INCOME}20`; 
 
-  if (metrics.surplusRate < 0) {
-    gaugeText = 'Warning: High Burn';
+  // --- NEW THRESHOLDS ---
+  if (metrics.surplusRate < 30) {
+    // < 30%: Red Zone
+    gaugeText = 'Low Fuel Warning';
     gaugeStatusColor = COLOR_EXPENSE;
     gaugeStatusBg = `${COLOR_EXPENSE}20`;
-  } else if (metrics.surplusRate < 20) {
-    gaugeText = 'Tight Squeeze';
-    gaugeStatusColor = '#d97706'; 
+  } else if (metrics.surplusRate >= 30 && metrics.surplusRate < 45) {
+    // 30% - 45%: Yellow Zone
+    gaugeText = 'Stabilizing';
+    gaugeStatusColor = '#d97706'; // Amber
     gaugeStatusBg = '#fffbeb';
+  } else {
+    // > 45%: Green Zone
+    gaugeText = 'Cruising Altitude';
+    gaugeStatusColor = COLOR_INCOME;
+    gaugeStatusBg = `${COLOR_INCOME}20`; 
   }
 
   if (loading) return <div className="p-8 animate-pulse">Loading Cockpit...</div>;
@@ -173,7 +188,6 @@ const ControlHub: React.FC = () => {
            <div className={styles.summaryContent}>
              
              {/* CLICKABLE INCOME BAR */}
-             {/* Added Link to /income */}
              <Link to="/income" className={styles.clickableRow} title="View All Income">
                <div className={styles.flowLabel}>
                   <span className="flex items-center gap-1">
@@ -190,7 +204,6 @@ const ControlHub: React.FC = () => {
              </Link>
 
              {/* CLICKABLE EXPENSE BAR */}
-             {/* Added Link to /expenses */}
              <Link to="/expenses" className={styles.clickableRow} title="View All Expenses">
                <div className={styles.flowLabel}>
                   <span className="flex items-center gap-1">

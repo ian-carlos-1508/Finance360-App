@@ -1,25 +1,16 @@
-// src/types/journey.ts
+/* File: src/types/journey.ts */
 
-/**
- * ====================================
- * JOURNEY TYPE DEFINITIONS
- * Defines the structure for the gamified financial journey progress.
- * ====================================
- */
-
-// UPDATED: Added 'LOCKED' so TypeScript accepts the gatekeeper logic
+// Note: Assuming these external types and interfaces are defined and correct
 export type ProgressStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'LOCKED';
 
 /**
  * Defines a single Actionable Module (e.g., Budgets, Goals, Investments).
- * This structure drives the navigation and the Next Action Card.
  */
 export interface JourneyModule {
     id: string; // e.g., 'm-budget', 'm-goals'
     title: string; // e.g., 'Assign Budgets'
     path: string; // The URL path to the module page
     status: ProgressStatus;
-    // The short, compelling benefit statement for the Next Action Card
     benefitStatement?: string; 
 }
 
@@ -28,30 +19,32 @@ export interface JourneyModule {
  */
 export interface JourneyStep {
     id: 'control' | 'build' | 'optimize';
-    title: string; // e.g., 'Cash Flow Mastery'
-    icon: string; // e.g., '🎛️'
+    title: string; 
+    icon: string;
     status: ProgressStatus;
-    // Calculated based on module completion (0-100)
     progressPercent: number; 
     modules: JourneyModule[];
-    // Scorecard data displayed in the sidebar (optional)
     microScore?: {
-        label: string; // e.g., 'Budget Adherence'
-        value: string; // e.g., '92%'
-        goal: string; // e.g., '95%+'
+        label: string;
+        value: string;
+        goal: string;
     };
 }
 
 /**
- * The root structure returned by the API.
+ * The root structure returned by the API/Service.
  */
 export interface FinancialJourney {
-    // Check for wizard completion as the first gate
     onboardingComplete: boolean; 
-    currentStepId: JourneyStep['id'] | null; // The lowest incomplete step
+    currentStepId: JourneyStep['id'] | null;
     steps: JourneyStep[];
     
-    // UPDATED: Added Gamification Stats
     userLevel?: number;
     userXP?: number;
+
+    // NEW: Streak Data Structure
+    streak?: {
+        currentStreak: number;
+        lastActiveDate: string | null;
+    };
 }

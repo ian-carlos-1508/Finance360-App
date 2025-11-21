@@ -12,6 +12,13 @@ import type { Transaction as IncomeExpenseTransaction } from './RecentTransactio
 import type { Transfer as TransferTransaction } from './RecentTransfers';
 import { HiPlus } from 'react-icons/hi';
 
+// --- NEW: Gamification Imports ---
+import { useGamificationToast } from '../../context/GamificationToastContext';
+// Ideally, you would use the hook to get the journey state, 
+// but for now we can infer 'hasFinancialDrag' or fetch it if needed.
+// To keep it simple and robust, we will trust the backend trigger to block XP,
+// and use a simple frontend check for the visual feedback.
+
 // --- Type Definitions ---
 type Category = {
   category_id: string;
@@ -33,7 +40,6 @@ interface AddTransactionModalProps {
 }
 
 // --- DATE BUG FIX 1: Helper to get local date string ---
-// This avoids the .toISOString() bug when it's late at night.
 const getLocalYyyyMmDd = (date: Date = new Date()) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -52,7 +58,6 @@ function AddTransactionModal({
 }: AddTransactionModalProps) {
   // Form state
   const [amount, setAmount] = useState('');
-  // --- DATE BUG FIX 1: Use helper for default state ---
   const [date, setDate] = useState(getLocalYyyyMmDd());
   const [description, setDescription] = useState('');
   const [accountId, setAccountId] = useState('');
@@ -79,6 +84,9 @@ function AddTransactionModal({
   // App state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // --- NEW: Gamification Hook ---
+  const { showXpToast, showWarningToast } = useGamificationToast();
 
   // --- Data Fetching Functions (unchanged) ---
   const fetchAccounts = async () => {
@@ -144,12 +152,8 @@ function AddTransactionModal({
 
         // Pre-fill logic for EDIT mode
         if (transactionToEdit) {
-          // --- EXPENSE SIGN FIX: Use Math.abs to show positive num in form ---
           setAmount(Math.abs(transactionToEdit.amount).toString());
-          
-          /* --- TIMEZONE BUG FIX (WHEN EDITING) --- */
           setDate(transactionToEdit.date);
-          
           setDescription(transactionToEdit.description || '');
 
           if (transactionType === 'Transfer') {
@@ -202,7 +206,7 @@ function AddTransactionModal({
       };
       loadAllData();
     }
-  }, [isOpen, transactionToEdit, transactionType]); // Added clearForm fields to reset
+  }, [isOpen, transactionToEdit, transactionType]); 
 
   // Update subcategories (unchanged)
   useEffect(() => {
@@ -230,7 +234,7 @@ function AddTransactionModal({
 
   const clearForm = () => {
     setAmount('');
-    setDate(getLocalYyyyMmDd()); // Use local date on clear
+    setDate(getLocalYyyyMmDd()); 
     setDescription('');
     setAccountId('');
     setToAccountId('');
@@ -278,19 +282,14 @@ function AddTransactionModal({
       return;
     }
 
-    /* --- EXPENSE SIGN FIX ---
-       User always enters a positive amount.
-       We convert it to negative *only* if it's an 'Expense'.
-    */
     const finalAmount = Math.abs(parseFloat(amount) || 0);
     const finalFeeAmount = Math.abs(parseFloat(feeAmount) || 0);
 
     const transactionsToInsert = [];
     const mainTransaction = {
-      date: date, // 'YYYY-MM-DD' string
+      date: date, 
       type: transactionType,
       description: description,
-      // Apply signage based on type
       amount: transactionType === 'Expense' ? -finalAmount : finalAmount, 
       account_id: accountId,
       to_account_id: transactionType === 'Transfer' ? toAccountId : null,
@@ -300,19 +299,17 @@ function AddTransactionModal({
 
     if (showFee && !transactionToEdit) {
       const feeTransaction = {
-        date: date, // 'YYYY-MM-DD' string
+        date: date, 
         type: 'Expense',
         description: `Fee: ${description}`,
-        // Fees are always expenses, so make it negative
         amount: -finalFeeAmount, 
         account_id: accountId,
         to_account_id: null,
         category_id: feeCategoryId,
-        nw_type: 'Need', // Default fees to 'Need'
+        nw_type: 'Need', 
       };
       transactionsToInsert.push(feeTransaction);
     }
-    /* --- END EXPENSE SIGN FIX --- */
 
     let dbError: any = null;
     if (transactionToEdit) {
@@ -332,6 +329,27 @@ function AddTransactionModal({
     if (dbError) {
       setError(dbError.message);
     } else {
+      // --- GAMIFICATION TRIGGER ---
+      // Only show XP toast for NEW transactions
+      if (!transactionToEdit) {
+        // Check for Investment Guardrail ("The Rebel")
+        // We check if the mainCategory contains "Invest"
+        const isInvestment = mainCategory.toLowerCase().includes('invest');
+        
+        // We rely on the backend SQL trigger to actually block the XP if they have debt.
+        // Here we provide the immediate feedback.
+        if (isInvestment) {
+           // If it's an investment, we warn them to check Wealth HQ for efficiency
+           showWarningToast("Investment Recorded. (Check Wealth HQ for efficiency)");
+        } else {
+           // Standard Reward for regular logging
+           showXpToast(5, `${transactionType} Logged!`);
+        }
+      } else {
+        // Edit feedback
+        showWarningToast("Transaction Updated.");
+      }
+      
       clearForm();
       onTransactionAdded();
       onClose();
@@ -386,7 +404,7 @@ function AddTransactionModal({
             <input id="description" className={styles.input} type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="e.g., Paycheck, Groceries" />
           </div>
 
-          {/* --- UPDATED: Account Row --- */}
+          {/* --- Account Row --- */}
           <div className={styles.formRow}>
             <label className={styles.label} htmlFor="account">
               {transactionType === 'Transfer' ? 'From Account' : 'Account'}
@@ -419,7 +437,7 @@ function AddTransactionModal({
           </div>
           
           {transactionType === 'Transfer' ? (
-            // --- UPDATED: To Account Row ---
+            // --- To Account Row ---
             <div className={styles.formRow}>
               <label className={styles.label} htmlFor="to-account">To Account</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -450,7 +468,7 @@ function AddTransactionModal({
             </div>
           ) : (
             <>
-              {/* --- UPDATED: Category Row --- */}
+              {/* --- Category Row --- */}
               <div className={styles.formRow}>
                 <label className={styles.label} htmlFor="category">Category</label>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -500,7 +518,7 @@ function AddTransactionModal({
             </>
           )}
           
-          {/* --- N/W SECTION (Unchanged) --- */}
+          {/* --- N/W SECTION --- */}
           {transactionType === 'Expense' && (
             <div className={styles.formRow}>
               <label className={styles.label} htmlFor="nw-type">
@@ -513,7 +531,7 @@ function AddTransactionModal({
                 onChange={(e) =>
                   setNwType((e.target.value as 'Need' | 'Want') || null)
                 }
-                required // Make it required
+                required 
               >
                 <option value="" disabled>Select Need or Want</option>
                 <option value="Need">Need</option>
@@ -522,7 +540,7 @@ function AddTransactionModal({
             </div>
           )}
           
-          {/* --- Fee Section (Unchanged) --- */}
+          {/* --- Fee Section --- */}
           {transactionType === 'Transfer' && !transactionToEdit && (
             <div className={styles.formRow} style={{ alignItems: 'center' }}>
               <label className={styles.label} htmlFor="show-fee">Fee?</label>

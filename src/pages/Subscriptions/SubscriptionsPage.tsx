@@ -9,17 +9,19 @@ import Modal from '../../components/Modal/Modal';
 import { type Account } from '../../components/Accounts/AddAccountForm';
 import AddAccountForm from '../../components/Accounts/AddAccountForm';
 import AddCategoryForm from '../../components/Categories/AddCategoryForm';
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub'; 
 import {
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
   CartesianGrid,
 } from 'recharts';
 // --- NEW: Import the centralized colors ---
@@ -30,12 +32,7 @@ import {
 } from '../../lib/chartColors';
 
 // --- Type Definitions ---
-type Category = {
-  category_id: string;
-  type: 'Income' | 'Expense';
-  category: string;
-  subcategory: string | null;
-};
+type Category = { category_id: string; type: 'Income' | 'Expense'; category: string; subcategory: string | null; };
 type TransactionType = 'Income' | 'Expense';
 type FrequencyType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 // --- FIX: Add nw_type ---
@@ -256,7 +253,7 @@ function SubscriptionsPage() {
     fetchDropdownData();
   }, []); // Run only once on page load
 
-  // --- Procesador de Datos del Dashboard ---
+  // --- Procesador de Datos del Dashboard (Original Logic) ---
   function processDashboardData(data: RecurringTransaction[]) {
     let monthlyTotal = 0;
     let yearlyTotal = 0;
@@ -297,7 +294,7 @@ function SubscriptionsPage() {
     setBarChartData(Array.from(accountMap, ([name, amount]) => ({ name, amount })));
   }
 
-  // --- Form Handling ---
+  // --- Form Handling (omitted for brevity) ---
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -366,7 +363,7 @@ function SubscriptionsPage() {
     });
   };
 
-  // --- CRUD Operations ---
+  // --- CRUD Operations (omitted for brevity) ---
   const handleOpenAddModal = () => {
     setFormData(defaultRecurring);
     setSelectedTx(null);
@@ -518,6 +515,9 @@ function SubscriptionsPage() {
 
   return (
     <div>
+      {/* 1. BACK TO HUB NAVIGATION */}
+      <BackToHub to="/build" label="Back to Fortress Dashboard" />
+      
       <div className={`${styles.listHeader} no-print`}>
         <h1 className={styles.title}>Subscriptions & Recurring</h1>
         <button className={styles.addButton} onClick={handleOpenAddModal}>
@@ -528,21 +528,36 @@ function SubscriptionsPage() {
       {error && <p className={styles.errorText}>{error}</p>}
 
       {/* --- Mini-Dashboard de KPIs --- */}
+      {/* NOTE: We assume kpiSection is a 4-column grid for this page */}
       <div className={`${styles.kpiSection} no-print`}>
+        
+        {/* KPI 1: Monthly Cost */}
         <div className={`${styles.kpiCard} ${styles.red}`}>
           <h3 className={styles.kpiTitle}>Total Monthly Cost</h3>
           <p className={styles.kpiValue}>
             {formatCurrency(kpiData.monthlyTotal * -1)}
           </p>
         </div>
+        
+        {/* KPI 2: Total Count */}
         <div className={`${styles.kpiCard} ${styles.gray}`}>
           <h3 className={styles.kpiTitle}>Total Subscriptions</h3>
           <p className={styles.kpiValue}>{kpiData.count}</p>
         </div>
+        
+        {/* KPI 3: Estimated Yearly Cost (Original 3rd KPI) */}
         <div className={`${styles.kpiCard} ${styles.blue}`}>
           <h3 className={styles.kpiTitle}>Estimated Yearly Cost</h3>
           <p className={styles.kpiValue}>
             {formatCurrency(kpiData.yearlyTotal * -1)}
+          </p>
+        </div>
+        
+        {/* KPI 4: Average Cost per Item (The new logical KPI) */}
+        <div className={`${styles.kpiCard} ${styles.gray}`}>
+          <h3 className={styles.kpiTitle}>Avg. Cost per Item</h3>
+          <p className={styles.kpiValue}>
+            {formatCurrency(kpiData.monthlyTotal / (kpiData.count || 1))}
           </p>
         </div>
       </div>
@@ -603,7 +618,6 @@ function SubscriptionsPage() {
                 <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
                 />
-                {/* --- UPDATED: Use centralized color --- */}
                 <Bar dataKey="amount" fill={COLOR_EXPENSE} />
               </BarChart>
             </ResponsiveContainer>
@@ -638,7 +652,7 @@ function SubscriptionsPage() {
               {recurringTxs.length === 0 && (
                 <tr>
                   <td
-                    colSpan={8} // <-- FIX: Increased colspan
+                    colSpan={8} 
                     style={{ textAlign: 'center', padding: '1rem' }}
                   >
                     No recurring transactions found. Add one to get started!
@@ -695,7 +709,7 @@ function SubscriptionsPage() {
         )}
       </div>
 
-      {/* --- MODAL DE AÑADIR/EDITAR --- */}
+      {/* --- MODAL DE AÑADIR/EDITAR (omitted for brevity) --- */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -936,7 +950,7 @@ function SubscriptionsPage() {
         </form>
       </Modal>
 
-      {/* --- UPDATED: MODAL DE ELIMINAR --- */}
+      {/* --- MODAL DE ELIMINAR --- */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
