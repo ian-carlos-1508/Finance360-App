@@ -1,0 +1,314 @@
+/* src/components/Sidebar/DynamicSidebar.module.css */
+
+/* --- MAIN CONTAINER --- */
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background-color: #FAFAFA;
+  border-right: 1px solid #E5E7EB;
+}
+
+/* --- BRAND HEADER (Restored V1 Style) --- */
+.brandHeader {
+  height: 64px; /* Standard Navbar height */
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* Center the icon when collapsed */
+.brandHeaderCollapsed {
+  composes: brandHeader;
+  padding: 0;
+  justify-content: center;
+}
+
+.brandIcon {
+  font-size: 1.5rem;
+  color: #2563EB; /* Blue-600 */
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(37, 99, 235, 0.2));
+}
+
+.brandTitle {
+  margin-left: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 800; /* Extra Bold */
+  color: #111827;   /* Gray-900 */
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+/* --- PLAYER CARD (Gamification) --- */
+.playerCard {
+  margin: 0 1rem 1rem 1rem;
+  padding: 0.75rem;
+  background-color: #EFF6FF; /* Blue-50 */
+  border: 1px solid #DBEAFE; /* Blue-100 */
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.levelBadge {
+  width: 36px;
+  height: 36px;
+  background-color: #2563EB;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  flex-shrink: 0;
+}
+
+.xpInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.1;
+  overflow: hidden;
+}
+
+.xpLabel {
+  font-size: 0.65rem; /* Matches your 0.6rem request */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #60A5FA; /* Blue-400 */
+  margin-bottom: 2px;
+}
+
+.xpValue {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1E40AF; /* Blue-800 */
+  white-space: nowrap;
+}
+
+/* --- SCROLL AREA --- */
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+/* Hide scrollbar for Chrome/Safari/Opera but keep functionality */
+.scrollArea::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollArea::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 10px;
+}
+
+/* --- ACCORDION ITEMS --- */
+.accordionItem {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.lockedItem {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
+/* --- STEP HEADER --- */
+.stepHeader {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.stepHeader:hover {
+  background-color: #F3F4F6;
+}
+
+.stepTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stepTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stepTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.activeStepTitle {
+  color: #111827;
+  font-weight: 700;
+}
+
+.stepIconWrapper {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+/* --- PROGRESS BAR --- */
+.progressBarContainer {
+  width: 100%;
+  height: 3px;
+  background-color: #e5e7eb;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s ease-in-out;
+}
+
+/* --- TIMELINE & MODULES --- */
+.timelineContainer {
+  margin-left: 1.85rem;
+  border-left: 2px solid #E5E7EB;
+  padding-left: 0.75rem;
+  padding-bottom: 1rem;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navItem {
+  position: relative;
+  font-size: 0.8rem;
+  color: #6B7280;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.navItem::before {
+  content: '';
+  position: absolute;
+  left: -1.15rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #D1D5DB;
+  border: 2px solid #FAFAFA;
+  z-index: 10;
+}
+
+.navItem:hover {
+  background-color: #F3F4F6;
+  color: #111827;
+}
+
+.navItem:hover::before {
+  background-color: #9CA3AF;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.activeNavItem {
+  background-color: #EFF6FF;
+  color: #2563EB;
+  font-weight: 600;
+}
+
+.activeNavItem::before {
+  background-color: #2563EB;
+  width: 10px;
+  height: 10px;
+  left: -1.2rem;
+}
+
+/* --- FOOTER --- */
+.footer {
+  margin-top: auto;
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footerLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #4B5563;
+  font-size: 0.85rem;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.footerLink:hover {
+  background-color: #F3F4F6;
+  color: #111827;
+}
+
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.userName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userLabel {
+  font-size: 0.65rem;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1;
+}

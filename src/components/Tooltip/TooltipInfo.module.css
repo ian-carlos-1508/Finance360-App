@@ -1,36 +1,37 @@
-/* Replace file: src/components/Tooltip/TooltipInfo.module.css */
+/* src/components/Tooltip/TooltipInfo.module.css */
 
 .tooltipContainer {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
   cursor: help;
 }
 
 .tooltipText {
   visibility: hidden;
   width: 280px;
-  background-color: #1f2937; /* gray-800 */
+  background-color: #1f2937;
   color: #fff;
   text-align: left;
   border-radius: 6px;
   padding: 10px 12px;
   position: absolute;
-  z-index: 10;
+  z-index: 50; /* Increased Z-Index to pop over everything */
   bottom: 150%; 
   left: 50%;
-  /* Use transform for centering */
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s;
   font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.5;
+  pointer-events: none; /* Prevents flickering on hover */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* Added shadow for readability */
 }
 
-/* Arrow */
+/* Arrow Top (Default) */
 .tooltipText::after {
   content: "";
   position: absolute;
@@ -47,24 +48,37 @@
   opacity: 1;
 }
 
-/* --- NEW: 'Align Right' styles for tooltips on the right edge --- */
+/* --- Align Right --- */
 .alignRight .tooltipText {
   left: auto;
   right: 0;
-  transform: translateX(0); /* No horizontal transform */
+  transform: translateX(0);
 }
 
 .alignRight .tooltipText::after {
   left: auto;
-  right: 8px; /* Position arrow on the right side */
+  right: 8px;
   transform: translateX(0);
 }
 
+/* --- NEW: Position Bottom (For Headers) --- */
+/* This flips the tooltip to show BELOW the icon */
+.positionBottom .tooltipText {
+  bottom: auto;
+  top: 150%; /* Push down instead of up */
+}
+
+/* Flip the arrow to point UP */
+.positionBottom .tooltipText::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent #1f2937 transparent;
+}
 
 /* --- Styles for structured tooltips --- */
 .tooltipLabel {
   font-weight: 700;
-  color: #9ca3af; /* Lighter gray */
+  color: #9ca3af;
   display: block;
   margin-top: 8px;
   text-transform: uppercase;
@@ -77,7 +91,7 @@
 .tooltipContent {
   display: block;
   font-weight: 500;
-  margin-bottom: 8px; /* Space before next label */
+  margin-bottom: 8px;
 }
 
 .formula {
@@ -105,8 +119,8 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #a5f3fc; /* Light cyan for pop */
+  color: #a5f3fc;
   margin-top: 10px;
   padding-top: 8px;
-  border-top: 1px solid #374151; /* Separator line */
+  border-top: 1px solid #374151;
 }

@@ -1,4 +1,4 @@
-/* Replace file: src/components/Tooltip/TooltipInfo.tsx */
+/* File: src/components/Tooltip/TooltipInfo.tsx */
 
 import React from 'react';
 import styles from './TooltipInfo.module.css';
@@ -6,14 +6,16 @@ import { HiQuestionMarkCircle } from 'react-icons/hi2';
 
 interface TooltipInfoProps {
   children: React.ReactNode;
-  align?: 'right'; // Prop to align the tooltip to the right
+  align?: 'right'; // Horizontal alignment
+  position?: 'bottom'; // NEW: Vertical alignment
 }
 
-const TooltipInfo: React.FC<TooltipInfoProps> = ({ children, align }) => {
-  // Add the .alignRight class if the prop is passed
-  const containerClass = `${styles.tooltipContainer} ${
-    align === 'right' ? styles.alignRight : ''
-  }`;
+const TooltipInfo: React.FC<TooltipInfoProps> = ({ children, align, position }) => {
+  const containerClass = `
+    ${styles.tooltipContainer} 
+    ${align === 'right' ? styles.alignRight : ''}
+    ${position === 'bottom' ? styles.positionBottom : ''}
+  `;
 
   return (
     <div className={containerClass}>

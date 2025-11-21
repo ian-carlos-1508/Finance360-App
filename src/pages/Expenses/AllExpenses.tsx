@@ -1,4 +1,4 @@
-/* Replace file: src/pages/Expenses/AllExpensesPage.tsx */
+/* File: src/pages/Expenses/AllExpensesPage.tsx */
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
@@ -18,14 +18,13 @@ type Category = { category_id: string; category: string; subcategory: string | n
 
 const ITEMS_PER_PAGE = 40;
 
-// --- TIMEZONE BUG FIX: Add helper function ---
+// --- TIMEZONE BUG FIX ---
 const getLocalYyyyMmDd = (date: Date = new Date()) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-// --- END FIX ---
 
 function AllExpensesPage() {
   const [transactions, setTransactions] = useState<ExpenseTransaction[]>([]);
@@ -60,7 +59,6 @@ function AllExpensesPage() {
     fetchFilterData();
   }, []);
 
-  /* --- TIMEZONE BUG FIX --- */
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split('-').map(Number);
     const localDate = new Date(year, month - 1, day, 12, 0, 0);
@@ -71,7 +69,6 @@ function AllExpensesPage() {
       day: 'numeric',
     });
   };
-  /* --- END TIMEZONE BUG FIX --- */
 
   const fetchPaginatedExpenses = async () => {
     setLoading(true);
@@ -85,7 +82,6 @@ function AllExpensesPage() {
       .order('date', { ascending: false })
       .range(from, to);
 
-    // --- TIMEZONE BUG FIX: Use YYYY-MM-DD strings ---
     if (dateFilter === 'month') {
       const today = new Date();
       const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -94,7 +90,6 @@ function AllExpensesPage() {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       query = query.gte('date', getLocalYyyyMmDd(thirtyDaysAgo));
     }
-    // --- END TIMEZONE FIX ---
 
     if (accountFilter !== 'all') {
       query = query.eq('account_id', accountFilter);
@@ -116,11 +111,9 @@ function AllExpensesPage() {
     setLoading(false);
   };
 
-  // --- FIX: Reverted to simple data fetching hook ---
   useEffect(() => {
     fetchPaginatedExpenses();
   }, [currentPage, dateFilter, accountFilter, categoryFilter]);
-  // --- END FIX ---
 
   useEffect(() => {
     setCurrentPage(1);
@@ -145,17 +138,16 @@ function AllExpensesPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      fetchPaginatedExpenses(); // Just refetch
+      fetchPaginatedExpenses();
       setIsDeleteModalOpen(false);
       setTransactionToDelete(null);
     }
   };
   
   const handleTransactionAdded = () => {
-    fetchPaginatedExpenses(); // Just refetch
+    fetchPaginatedExpenses();
   };
   
-  // FIX: Re-added totalPages calculation
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   return (
@@ -206,8 +198,13 @@ function AllExpensesPage() {
         </select>
       </div>
 
-      <Link to="/expenses" className={styles.backLink}>
-        &larr; Back to Expense Overview
+      {/* --- NAV FIX: Point back to Transaction Hub (EXPENSES Tab) --- */}
+      <Link 
+        to="/transactions-hub" 
+        state={{ defaultTab: 'EXPENSES' }} 
+        className={styles.backLink}
+      >
+        &larr; Back to Transaction Hub
       </Link>
 
       <div className={styles.card}>
@@ -233,7 +230,6 @@ function AllExpensesPage() {
                 transactions.map(tx => (
                   <tr key={tx.transaction_id}>
                     <td style={{ textAlign: 'center' }}>
-                      {/* --- FIX: Changed "N" to "Needs" and "W" to "Wants" --- */}
                       {tx.nw_type === 'Need' && <span className={`${sharedStyles.tag} ${sharedStyles.tagNeed}`}>Needs</span>}
                       {tx.nw_type === 'Want' && <span className={`${sharedStyles.tag} ${sharedStyles.tagWant}`}>Wants</span>}
                     </td>
@@ -242,11 +238,9 @@ function AllExpensesPage() {
                     <td>{tx.subcategory || '---'}</td>
                     <td>{tx.from_account_name}</td>
                     
-                    {/* --- CONSISTENCY FIX --- */}
                     <td className={styles.amount} style={{ color: COLOR_EXPENSE }}>
                       - {formatCurrency(Math.abs(tx.amount))}
                     </td>
-                    {/* --- END FIX --- */}
                     
                     <td style={{textAlign: 'right'}}>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
@@ -298,7 +292,7 @@ function AllExpensesPage() {
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onTransactionAdded={handleTransactionAdded} // FIX: Use correct handler
+        onTransactionAdded={handleTransactionAdded}
         transactionType="Expense"
         transactionToEdit={transactionToEdit}
       />

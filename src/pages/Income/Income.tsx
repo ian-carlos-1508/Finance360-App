@@ -1,4 +1,4 @@
-/* Replace file: src/pages/Income/IncomePage.tsx */
+/* Replace file: src/pages/Income/Income.tsx */
 
 import { useState, useEffect } from 'react';
 import styles from '../Settings/Settings.module.css';
@@ -22,18 +22,18 @@ import {
   Legend,
 } from 'recharts';
 import { formatCurrency } from '../../lib/utils';
-// --- NEW: Import the centralized colors ---
 import {
   CHART_COLORS,
   COLOR_INCOME,
 } from '../../lib/chartColors';
+// --- NEW: Import Navigation ---
+import BackToHub from '../../components/Navigation/BackToHub';
 
 // --- Type Definitions ---
 type KpiData = {
   totalIncome: number;
   transactionCount: number;
   averageIncome: number;
-  // --- NEW: Add new KPI fields ---
   topCategory: string;
   avgMonthlyIncome: number;
 };
@@ -47,17 +47,14 @@ type Category = {
   subcategory: string | null;
 };
 
-// --- TIMEZONE BUG FIX: Add helper function ---
 const getLocalYyyyMmDd = (date: Date = new Date()) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-// --- END FIX ---
 
 function IncomePage() {
-  // --- Modal State ---
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionToEdit, setTransactionToEdit] =
@@ -65,21 +62,17 @@ function IncomePage() {
   const [transactionToDelete, setTransactionToDelete] =
     useState<Transaction | null>(null);
 
-  // --- Filter State ---
   const [dateFilter, setDateFilter] = useState<DateFilter>('all');
   const [accountFilter, setAccountFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
 
-  // --- Filter Data State ---
   const [filterAccounts, setFilterAccounts] = useState<Account[]>([]);
   const [filterCategories, setFilterCategories] = useState<Category[]>([]);
 
-  // --- Page Data State ---
   const [kpiData, setKpiData] = useState<KpiData>({
     totalIncome: 0,
     transactionCount: 0,
     averageIncome: 0,
-    // --- NEW: Init new KPI fields ---
     topCategory: 'N/A',
     avgMonthlyIncome: 0,
   });
@@ -89,10 +82,8 @@ function IncomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // --- RACE CONDITION FIX: Add a refresh key ---
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // --- Data Fetching ---
   useEffect(() => {
     const fetchFilterData = async () => {
       const { data: accounts } = await supabase
@@ -109,33 +100,27 @@ function IncomePage() {
     fetchFilterData();
   }, []);
 
-  // --- RECURRING TRANSACTIONS TRIGGER ---
   useEffect(() => {
     const processTransactions = async () => {
-      setLoading(true); // Start loading
-      // Call the new SQL function to back-fill transactions
+      setLoading(true);
       const { error } = await supabase.rpc('fn_process_recurring_transactions');
       if (error) {
         console.error("Error processing recurring transactions:", error.message);
       }
-      // After processing, trigger the data fetch
       setRefreshKey(key => key + 1); 
     };
     
     processTransactions();
   }, [dateFilter, accountFilter, categoryFilter]);
-  // --- END TRIGGER ---
 
   const fetchData = async () => {
-    // Note: setLoading(true) is now called in the trigger hook
     setError('');
 
     let query = supabase
-      .from('v_income') // This query is now valid
+      .from('v_income') 
       .select('*')
       .order('date', { ascending: false });
 
-    // --- TIMEZONE BUG FIX: Use YYYY-MM-DD strings ---
     if (dateFilter === 'month') {
       const today = new Date();
       const firstDay = new Date(
@@ -150,7 +135,6 @@ function IncomePage() {
       );
       query = query.gte('date', getLocalYyyyMmDd(thirtyDaysAgo));
     }
-    // --- END TIMEZONE FIX ---
 
     if (accountFilter !== 'all') {
       query = query.eq('account_id', accountFilter);
@@ -166,16 +150,13 @@ function IncomePage() {
       console.error('Error fetching income:', error);
       setError(error.message);
     } else if (data) {
-      // The view v_income already casts 'date' to 'text'
       const typedData = data as Transaction[];
 
-      // 1. Calculate KPIs
       const totalIncome = typedData.reduce((sum, tx) => sum + tx.amount, 0);
       const transactionCount = typedData.length;
       const averageIncome =
         transactionCount > 0 ? totalIncome / transactionCount : 0;
       
-      // --- NEW KPI CARD LOGIC ---
       let topCategory = 'N/A';
       if (typedData.length > 0) {
         const categoryTotals: { [key: string]: number } = {};
@@ -201,7 +182,6 @@ function IncomePage() {
           avgMonthlyIncome = totalIncome / numMonths;
         }
       }
-      // --- END NEW KPI LOGIC ---
 
       setKpiData({ 
         totalIncome, 
@@ -211,10 +191,8 @@ function IncomePage() {
         avgMonthlyIncome 
       });
 
-      // 2. Set Recent Transactions
       setRecentIncome(typedData.slice(0, 10));
 
-      // 3. Process Bar Chart
       const monthlyIncome: { [key: string]: number } = {};
       const monthNames = [
         'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -231,7 +209,6 @@ function IncomePage() {
         .filter((d) => d.income > 0);
       setBarChartData(processedBarData);
 
-      // 4. Process Pie Chart
       const accountIncome: { [key: string]: number } = {};
       typedData.forEach((tx) => {
         const accName = tx.from_account_name || 'Unknown';
@@ -246,16 +223,12 @@ function IncomePage() {
     setLoading(false);
   };
 
-  // --- NEW: Data fetching hook triggered by refreshKey ---
   useEffect(() => {
     if (refreshKey > 0) {
       fetchData();
     }
   }, [refreshKey]);
-  // --- END NEW HOOK ---
 
-
-  // --- Event Handlers ---
   const handleOpenAddModal = () => {
     setTransactionToEdit(null);
     setIsAddModalOpen(true);
@@ -277,16 +250,18 @@ function IncomePage() {
       .match({ transaction_id: transactionToDelete.transaction_id });
     if (error) setError(error.message);
     else {
-      fetchData(); // Refetch data after delete
+      fetchData(); 
       setIsDeleteModalOpen(false);
       setTransactionToDelete(null);
     }
     setLoading(false);
   };
-  // --- End Event Handlers ---
 
   return (
     <div>
+      {/* --- NEW: Navigation Back to Hub --- */}
+      <BackToHub to="/control" label="Back to Cash Flow Command" />
+
       <div
         style={{
           display: 'flex',
@@ -350,7 +325,6 @@ function IncomePage() {
       </div>
 
       <div className={styles.pageGrid}>
-        {/* --- SECTION 1: KPI Cards (UPDATED) --- */}
         <div className={styles.kpiSection}>
           <div className={`${styles.kpiCard} ${styles.green}`}>
             <h3 className={styles.kpiTitle}>Total Income (Filtered)</h3>
@@ -358,14 +332,12 @@ function IncomePage() {
               {formatCurrency(kpiData.totalIncome)}
             </p>
           </div>
-          {/* --- KPI CARD 2: CHANGED --- */}
           <div className={`${styles.kpiCard} ${styles.gray}`}>
             <h3 className={styles.kpiTitle}>Top Category</h3>
             <p className={styles.kpiValue} style={{ fontSize: '1.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {kpiData.topCategory}
             </p>
           </div>
-          {/* --- KPI CARD 3: CHANGED --- */}
           <div className={`${styles.kpiCard} ${styles.gray}`}>
             <h3 className={styles.kpiTitle}>Average Monthly Income</h3>
             <p className={styles.kpiValue}>
@@ -392,7 +364,7 @@ function IncomePage() {
             type="Income"
             onEdit={handleOpenEditModal}
             onDelete={handleOpenDeleteModal}
-            allLinkPath="/income/all" /* <-- NEW PROP */
+            allLinkPath="/income/all"
           />
         </div>
 
@@ -410,7 +382,6 @@ function IncomePage() {
                   <Tooltip
                     formatter={(value: number) => formatCurrency(value)}
                   />
-                  {/* --- UPDATED: Use centralized color --- */}
                   <Bar dataKey="income" fill={COLOR_INCOME} />
                 </BarChart>
               </ResponsiveContainer>
@@ -420,7 +391,6 @@ function IncomePage() {
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Income by Account (Filtered)</h2>
             <div className={styles.chartContainer}>
-              {/* --- TYPO FIX: Changed height="1all" to "100%" --- */}
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -430,11 +400,11 @@ function IncomePage() {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
+                    nameKey="name"
                     label={(entry: any) =>
                       `${(entry.percent * 100).toFixed(0)}%`
                     }
                   >
-                    {/* --- UPDATED: Use new centralized palette --- */}
                     {pieChartData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
@@ -453,11 +423,10 @@ function IncomePage() {
         </div>
       </div>
 
-      {/* --- MODALS --- */}
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onTransactionAdded={fetchData} // Changed from processTransactions to just fetchData
+        onTransactionAdded={fetchData}
         transactionType="Income"
         transactionToEdit={transactionToEdit}
       />

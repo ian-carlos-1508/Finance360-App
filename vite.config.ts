@@ -1,3 +1,5 @@
+/* File: vite.config.ts */
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -5,9 +7,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   
-  // ⬅️ ADD THIS BLOCK ⬅️
   server: {
-    host: '0.0.0.0', // This allows connections from external IPs (like Serveo/ngrok)
-    port: 5173      // Optional: Explicitly set your port for clarity
+    host: '0.0.0.0', // Keeps your existing setting
+    port: 5173,      // Keeps your existing setting
+    
+    // ⬇️ ADD THIS PROXY BLOCK ⬇️
+    proxy: {
+      // Any request starting with /api is forwarded to the Backend Server
+      '/api': {
+        target: 'http://localhost:3000', // Must match your server/index.ts port
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   }
 })

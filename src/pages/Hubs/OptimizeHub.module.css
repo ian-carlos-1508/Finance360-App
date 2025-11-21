@@ -1,0 +1,239 @@
+/* src/pages/Hubs/OptimizeHub.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- HERO: THE MOUNTAIN (Chart) --- */
+.heroCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  position: relative;
+}
+
+.heroHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.heroTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.netWorthValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.1;
+}
+
+.chartWrapper {
+  flex: 1;
+  width: 100%;
+  min-height: 200px;
+  margin-top: 0.5rem;
+}
+
+/* --- MID SECTION: METRICS --- */
+.midGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .midGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: visible;
+  min-height: 240px;
+}
+
+.cardHeader {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Tachometer */
+.tachoWrapper {
+  width: 180px;
+  height: 90px;
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.tachoValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin-top: -1.25rem;
+  z-index: 10;
+}
+
+.tachoLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 99px;
+  margin-top: 0.5rem;
+}
+
+.statusGreen { background-color: #ecfdf5; color: #059669; }
+.statusRed { background-color: #fef2f2; color: #dc2626; }
+
+/* Ticker */
+.tickerContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 0.25rem;
+}
+
+.tickerValue {
+  font-family: 'Courier New', Courier, monospace; 
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #059669;
+  background-color: #ecfdf5;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #d1fae5;
+  width: 100%;
+  text-align: center;
+}
+
+.tickerSub {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* --- NAVIGATION DECK --- */
+.navSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- CONSISTENT NAV CARD STYLES (Matches BuildHub) --- */
+.navCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  /* REMOVED: overflow: hidden and relative positioning that clipped the arrow */
+}
+
+.navCard:hover {
+  border-color: #4f46e5; /* Indigo-600 (Consistent with BuildHub) */
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.navIconBox {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.navContent { flex: 1; }
+
+.navTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.navSubtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* --- FIXED ARROW STYLES --- */
+.arrowIcon {
+  color: #9ca3af;
+  transition: transform 0.2s;
+  /* REMOVED: absolute positioning, opacity, and centering hacks */
+}
+
+.navCard:hover .arrowIcon {
+  color: #4f46e5; /* Indigo-600 (Matches Border) */
+  transform: translateX(4px); /* Slight slide right */
+  /* REMOVED: opacity change (it's always visible now) */
+}

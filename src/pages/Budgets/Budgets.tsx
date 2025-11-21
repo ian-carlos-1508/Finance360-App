@@ -25,13 +25,14 @@ import {
   Cell,
 } from 'recharts';
 import { formatCurrency } from '../../lib/utils';
-// --- NEW: Import the centralized colors ---
 import {
   CHART_COLORS,
   COLOR_INCOME,
   COLOR_EXPENSE,
   COLOR_TRANSFER,
 } from '../../lib/chartColors';
+// --- NEW: Import BackToHub ---
+import BackToHub from '../../components/Navigation/BackToHub';
 
 // --- Type Definitions ---
 type Budget = {
@@ -63,15 +64,11 @@ type PieData = {
   value: number;
 };
 
-// --- REMOVED old PIE_COLORS constants ---
-
-// --- FIX: Moved this constant OUTSIDE the component function ---
 const PIE_COLORS_SINGLE_SEMANTIC = [
-  COLOR_TRANSFER, // Spent (using the 'Transfer' blue)
-  COLOR_INCOME, // Remaining (using the 'Income' green/teal)
-  COLOR_EXPENSE, // Overspent (using the 'Expense' red)
+  COLOR_TRANSFER, 
+  COLOR_INCOME, 
+  COLOR_EXPENSE, 
 ];
-// --- END FIX ---
 
 function BudgetsPage() {
   // --- State ---
@@ -153,7 +150,6 @@ function BudgetsPage() {
     fetchData();
   }, [dateFilter]);
 
-  // --- UPDATED: This effect now uses the new color constants ---
   useEffect(() => {
     if (pieFilter === 'all') {
       const processedPieData = budgets.map((b) => ({
@@ -161,7 +157,7 @@ function BudgetsPage() {
         value: b.budgeted_amount,
       }));
       setPieChartData(processedPieData);
-      setPieChartColors(CHART_COLORS); // <-- Use main pastel palette
+      setPieChartColors(CHART_COLORS); 
     } else {
       const selectedBudget = budgets.find((b) => b.budget_id === pieFilter);
       if (selectedBudget) {
@@ -180,10 +176,10 @@ function BudgetsPage() {
         }
 
         setPieChartData(singleBudgetData);
-        setPieChartColors(PIE_COLORS_SINGLE_SEMANTIC); // <-- Use new semantic palette
+        setPieChartColors(PIE_COLORS_SINGLE_SEMANTIC); 
       }
     }
-  }, [pieFilter, budgets]); // <-- FIX: Removed the array from the dependency list
+  }, [pieFilter, budgets]); 
 
   // --- Event Handlers ---
   const handleOpenAddModal = () => {
@@ -215,10 +211,12 @@ function BudgetsPage() {
     }
     setLoading(false);
   };
-  // --- End Event Handlers ---
 
   return (
     <div>
+      {/* --- NEW: Navigation Back to Hub --- */}
+      <BackToHub to="/control" label="Back to Cash Flow Command" />
+
       <div
         style={{
           display: 'flex',
@@ -271,7 +269,6 @@ function BudgetsPage() {
       </div>
 
       <div className={styles.pageGrid}>
-        {/* --- SECTION 1: KPI Cards --- */}
         <div className={styles.kpiSection}>
           <div className={`${styles.kpiCard} ${styles.blue}`}>
             <h3 className={styles.kpiTitle}>Total Budgeted</h3>
@@ -297,7 +294,6 @@ function BudgetsPage() {
           </div>
         </div>
 
-        {/* --- SECTION 2: Budgets Management --- */}
         <div className={`${styles.card} ${styles.tableSection}`}>
           <div className={styles.listHeader}>
             <h2
@@ -334,12 +330,11 @@ function BudgetsPage() {
                     : 0;
                 const isOver = remaining < 0;
 
-                // NEW: Logic for progress bar color
-                let progressBarClass = budgetStyles.progressBar; // Default blue
+                let progressBarClass = budgetStyles.progressBar; 
                 if (isOver || percent > 90) {
-                  progressBarClass = `${budgetStyles.progressBar} ${budgetStyles.atRisk}`; // Red
+                  progressBarClass = `${budgetStyles.progressBar} ${budgetStyles.atRisk}`; 
                 } else if (percent > 70) {
-                  progressBarClass = `${budgetStyles.progressBar} ${budgetStyles.warning}`; // Yellow
+                  progressBarClass = `${budgetStyles.progressBar} ${budgetStyles.warning}`; 
                 }
 
                 return (
@@ -369,7 +364,7 @@ function BudgetsPage() {
                     </div>
                     <div className={budgetStyles.progressBarContainer}>
                       <div
-                        className={progressBarClass} // <-- USES NEW CSS
+                        className={progressBarClass}
                         style={{
                           width: `${isOver ? 100 : Math.max(0, percent)}%`,
                         }}
@@ -396,7 +391,6 @@ function BudgetsPage() {
           </ul>
         </div>
 
-        {/* --- SECTION 3: Analytics --- */}
         <div className={styles.analyticsSection}>
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Budget vs. Actual</h2>
@@ -409,7 +403,6 @@ function BudgetsPage() {
                     formatter={(value: number) => formatCurrency(value)}
                   />
                   <Legend wrapperStyle={{ fontSize: '0.7rem' }} />
-                  {/* --- UPDATED: Use centralized colors --- */}
                   <Bar dataKey="Budgeted" fill={COLOR_TRANSFER} />
                   <Bar dataKey="Spent" fill={COLOR_EXPENSE} />
                   <Bar dataKey="Rollover" fill={COLOR_INCOME} />
@@ -466,7 +459,6 @@ function BudgetsPage() {
                       `${(entry.percent * 100).toFixed(0)}%`
                     }
                   >
-                    {/* --- UPDATED: This now uses the new state variable --- */}
                     {pieChartData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
@@ -487,7 +479,6 @@ function BudgetsPage() {
         </div>
       </div>
 
-      {/* --- MODALS --- */}
       <AddBudgetModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

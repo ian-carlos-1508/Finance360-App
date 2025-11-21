@@ -1,3 +1,5 @@
+/* File: src/pages/Transfers/AllTransfersPage.tsx */
+
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import styles from './AllTransfers.module.css'; // Use the new CSS
@@ -55,7 +57,7 @@ function AllTransfersPage() {
     const to = from + ITEMS_PER_PAGE - 1;
 
     let query = supabase
-      .from('v_transfers') // <-- Queries v_transfers
+      .from('v_transfers')
       .select('*', { count: 'exact' })
       .order('date', { ascending: false })
       .range(from, to);
@@ -174,8 +176,13 @@ function AllTransfersPage() {
         </select>
       </div>
 
-      <Link to="/transfers" className={styles.backLink}>
-        &larr; Back to Transfers Overview
+      {/* --- NAV FIX: Point back to Transaction Hub (TRANSFERS Tab) --- */}
+      <Link 
+        to="/transactions-hub" 
+        state={{ defaultTab: 'TRANSFERS' }} 
+        className={styles.backLink}
+      >
+        &larr; Back to Transaction Hub
       </Link>
       
       <div className={styles.card}>

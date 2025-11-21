@@ -1,7 +1,7 @@
-/* Replace file: src/pages/Transfers/TransfersPage.tsx */
+/* Replace file: src/pages/Transfers/Transfers.tsx */
 
 import { useState, useEffect } from 'react';
-import styles from '../Settings/Settings.module.css'; // Use master CSS
+import styles from '../Settings/Settings.module.css';
 import { supabase } from '../../lib/supabaseClient';
 import { HiPlus, HiExclamationTriangle } from 'react-icons/hi2';
 import Modal from '../../components/Modal/Modal';
@@ -18,10 +18,10 @@ import {
   Tooltip,
 } from 'recharts';
 import { formatCurrency } from '../../lib/utils';
-// --- NEW: Import the centralized color ---
 import { COLOR_TRANSFER } from '../../lib/chartColors';
+// --- NEW: Import Navigation ---
+import BackToHub from '../../components/Navigation/BackToHub';
 
-// --- Type Definitions ---
 type KpiData = {
   totalTransferred: number;
   transactionCount: number;
@@ -31,7 +31,6 @@ type DateFilter = 'all' | 'month' | '30days';
 type Account = { account_id: string; account_name: string };
 
 function TransfersPage() {
-  // --- Modal State ---
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionToEdit, setTransactionToEdit] = useState<Transfer | null>(
@@ -41,15 +40,12 @@ function TransfersPage() {
     null
   );
 
-  // --- Filter State ---
   const [dateFilter, setDateFilter] = useState<DateFilter>('all');
   const [fromAccountFilter, setFromAccountFilter] = useState<string>('all');
   const [toAccountFilter, setToAccountFilter] = useState<string>('all');
 
-  // --- Filter Data State ---
   const [filterAccounts, setFilterAccounts] = useState<Account[]>([]);
 
-  // --- Page Data State ---
   const [kpiData, setKpiData] = useState<KpiData>({
     totalTransferred: 0,
     transactionCount: 0,
@@ -59,10 +55,8 @@ function TransfersPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // --- Data Fetching ---
   useEffect(() => {
     const fetchFilterData = async () => {
-      // Fetch Accounts
       const { data: accounts } = await supabase
         .from('accounts')
         .select('account_id, account_name');
@@ -76,11 +70,10 @@ function TransfersPage() {
     setError('');
 
     let query = supabase
-      .from('v_transfers') // <-- Query v_transfers
+      .from('v_transfers')
       .select('*')
       .order('date', { ascending: false });
 
-    // Apply date filters
     if (dateFilter === 'month') {
       const today = new Date();
       const firstDay = new Date(
@@ -112,15 +105,12 @@ function TransfersPage() {
     } else if (data) {
       const typedData = data as Transfer[];
 
-      // 1. Calculate KPIs
       const totalTransferred = typedData.reduce((sum, tx) => sum + tx.amount, 0);
       const transactionCount = typedData.length;
       setKpiData({ totalTransferred, transactionCount });
 
-      // 2. Set Recent Transactions
       setRecentTransfers(typedData.slice(0, 10));
 
-      // 3. Process Bar Chart (Transfers by Month)
       const monthlyTransfers: { [key: string]: number } = {};
       const monthNames = [
         'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -146,7 +136,6 @@ function TransfersPage() {
     fetchData();
   }, [dateFilter, fromAccountFilter, toAccountFilter]);
 
-  // --- Event Handlers ---
   const handleOpenAddModal = () => {
     setTransactionToEdit(null);
     setIsAddModalOpen(true);
@@ -168,16 +157,18 @@ function TransfersPage() {
       .match({ transaction_id: transactionToDelete.transaction_id });
     if (error) setError(error.message);
     else {
-      fetchData(); // Refresh all data
+      fetchData();
       setIsDeleteModalOpen(false);
       setTransactionToDelete(null);
     }
     setLoading(false);
   };
-  // --- End Event Handlers ---
 
   return (
     <div>
+      {/* --- NEW: Navigation Back to Hub --- */}
+      <BackToHub to="/control" label="Back to Cash Flow Command" />
+
       <div
         style={{
           display: 'flex',
@@ -240,7 +231,6 @@ function TransfersPage() {
       </div>
 
       <div className={styles.pageGrid}>
-        {/* --- SECTION 1: KPI Cards --- */}
         <div className={styles.kpiSection}>
           <div className={`${styles.kpiCard} ${styles.blue}`}>
             <h3 className={styles.kpiTitle}>Total Transferred (Filtered)</h3>
@@ -254,7 +244,6 @@ function TransfersPage() {
           </div>
         </div>
 
-        {/* --- SECTION 2: Transfers Management Table --- */}
         <div className={`${styles.card} ${styles.tableSection}`}>
           <div className={styles.listHeader}>
             <h2
@@ -276,7 +265,6 @@ function TransfersPage() {
           />
         </div>
 
-        {/* --- SECTION 3: Analytics --- */}
         <div className={styles.analyticsSection}>
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Transfers by Month</h2>
@@ -291,7 +279,6 @@ function TransfersPage() {
                   <Tooltip
                     formatter={(value: number) => formatCurrency(value)}
                   />
-                  {/* --- UPDATED: Use centralized color --- */}
                   <Bar dataKey="amount" fill={COLOR_TRANSFER} />
                 </BarChart>
               </ResponsiveContainer>
@@ -300,7 +287,6 @@ function TransfersPage() {
         </div>
       </div>
 
-      {/* --- MODALS --- */}
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

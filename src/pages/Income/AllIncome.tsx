@@ -1,4 +1,4 @@
-/* Replace file: src/pages/Income/AllIncomePage.tsx */
+/* File: src/pages/Income/AllIncomePage.tsx */
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
@@ -17,14 +17,13 @@ type Category = { category_id: string; category: string; subcategory: string | n
 
 const ITEMS_PER_PAGE = 40;
 
-// --- TIMEZONE BUG FIX: Add helper function ---
+// --- TIMEZONE BUG FIX ---
 const getLocalYyyyMmDd = (date: Date = new Date()) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-// --- END FIX ---
 
 function AllIncomePage() {
   const [transactions, setTransactions] = useState<IncomeTransaction[]>([]);
@@ -59,23 +58,15 @@ function AllIncomePage() {
     fetchFilterData();
   }, []);
 
-  /* --- TIMEZONE BUG FIX ---
-     'dateString' is a "YYYY-MM-DD" string.
-     new Date("2025-10-30") creates a date at UTC midnight.
-     The fix is to parse the string and create a date at local noon.
-  */
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split('-').map(Number);
-    // Create a date for noon in the user's local timezone
     const localDate = new Date(year, month - 1, day, 12, 0, 0);
-
     return localDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
   };
-  /* --- END TIMEZONE BUG FIX --- */
 
   const fetchPaginatedIncome = async () => {
     setLoading(true);
@@ -89,7 +80,6 @@ function AllIncomePage() {
       .order('date', { ascending: false })
       .range(from, to);
 
-    // --- TIMEZONE BUG FIX: Use YYYY-MM-DD strings ---
     if (dateFilter === 'month') {
       const today = new Date();
       const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -98,7 +88,6 @@ function AllIncomePage() {
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       query = query.gte('date', getLocalYyyyMmDd(thirtyDaysAgo));
     }
-    // --- END TIMEZONE FIX ---
 
     if (accountFilter !== 'all') {
       query = query.eq('account_id', accountFilter);
@@ -123,18 +112,15 @@ function AllIncomePage() {
   // --- RECURRING TRANSACTIONS TRIGGER ---
   useEffect(() => {
     const processTransactions = async () => {
-      // Call the new SQL function to back-fill transactions
       const { error } = await supabase.rpc('fn_process_recurring_transactions');
       if (error) {
         console.error("Error processing recurring transactions:", error.message);
       }
-      // After processing, fetch all other data
       fetchPaginatedIncome();
     };
     
     processTransactions();
   }, [currentPage, dateFilter, accountFilter, categoryFilter]);
-  // --- END TRIGGER ---
 
   useEffect(() => {
     setCurrentPage(1);
@@ -217,8 +203,13 @@ function AllIncomePage() {
         </select>
       </div>
 
-      <Link to="/income" className={styles.backLink}>
-        &larr; Back to Income Overview
+      {/* --- NAV FIX: Point back to Transaction Hub (INCOME Tab) --- */}
+      <Link 
+        to="/transactions-hub" 
+        state={{ defaultTab: 'INCOME' }} 
+        className={styles.backLink}
+      >
+        &larr; Back to Transaction Hub
       </Link>
 
       <div className={styles.card}>
@@ -245,7 +236,6 @@ function AllIncomePage() {
                     <td>{formatDate(tx.date)}</td>
                     <td>{tx.category}</td>
                     <td>{tx.subcategory || '---'}</td>
-                    {/* --- THIS IS THE FIX --- */}
                     <td>{tx.from_account_name}</td>
                     <td className={styles.amount} style={{color: '#10b981'}}>
                       {formatCurrency(tx.amount)}

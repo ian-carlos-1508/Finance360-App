@@ -22,18 +22,18 @@ import {
   Legend,
 } from 'recharts';
 import { formatCurrency } from '../../lib/utils';
-// --- NEW: Import the centralized colors ---
 import {
   CHART_COLORS,
   COLOR_EXPENSE,
 } from '../../lib/chartColors';
+// --- NEW: Import Navigation ---
+import BackToHub from '../../components/Navigation/BackToHub';
 
 // --- Type Definitions ---
 type KpiData = {
   totalExpense: number;
   transactionCount: number;
   averageExpense: number;
-  // --- NEW: Add new KPI fields ---
   topCategory: string;
   avgMonthlyExpense: number;
 };
@@ -47,17 +47,14 @@ type Category = {
   subcategory: string | null;
 };
 
-// --- TIMEZONE BUG FIX: Add helper function ---
 const getLocalYyyyMmDd = (date: Date = new Date()) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-// --- END FIX ---
 
 function ExpensesPage() {
-  // --- Modal State ---
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionToEdit, setTransactionToEdit] =
@@ -65,21 +62,17 @@ function ExpensesPage() {
   const [transactionToDelete, setTransactionToDelete] =
     useState<Transaction | null>(null);
 
-  // --- Filter State ---
   const [dateFilter, setDateFilter] = useState<DateFilter>('all');
   const [accountFilter, setAccountFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
 
-  // --- Filter Data State ---
   const [filterAccounts, setFilterAccounts] = useState<Account[]>([]);
   const [filterCategories, setFilterCategories] = useState<Category[]>([]);
 
-  // --- Page Data State ---
   const [kpiData, setKpiData] = useState<KpiData>({
     totalExpense: 0,
     transactionCount: 0,
     averageExpense: 0,
-    // --- NEW: Init new KPI fields ---
     topCategory: 'N/A',
     avgMonthlyExpense: 0,
   });
@@ -89,7 +82,6 @@ function ExpensesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  // --- Data Fetching ---
   useEffect(() => {
     const fetchFilterData = async () => {
       const { data: accounts } = await supabase
@@ -107,7 +99,7 @@ function ExpensesPage() {
   }, []);
 
   const fetchData = async () => {
-    setLoading(true); // <-- Start loading
+    setLoading(true);
     setError('');
 
     let query = supabase
@@ -115,7 +107,6 @@ function ExpensesPage() {
       .select('*')
       .order('date', { ascending: false });
     
-    // --- TIMEZONE BUG FIX: Use YYYY-MM-DD strings ---
     if (dateFilter === 'month') {
       const today = new Date();
       const firstDay = new Date(
@@ -130,7 +121,6 @@ function ExpensesPage() {
       );
       query = query.gte('date', getLocalYyyyMmDd(thirtyDaysAgo));
     }
-    // --- END TIMEZONE FIX ---
 
     if (accountFilter !== 'all') {
       query = query.eq('account_id', accountFilter);
@@ -152,7 +142,6 @@ function ExpensesPage() {
       const averageExpense =
         transactionCount > 0 ? totalExpense / transactionCount : 0;
       
-      // --- NEW KPI CARD LOGIC ---
       let topCategory = 'N/A';
       if (typedData.length > 0) {
         const categoryTotals: { [key: string]: number } = {};
@@ -178,7 +167,6 @@ function ExpensesPage() {
           avgMonthlyExpense = totalExpense / numMonths; 
         }
       }
-      // --- END NEW KPI LOGIC ---
 
       setKpiData({ 
         totalExpense, 
@@ -225,13 +213,10 @@ function ExpensesPage() {
     setLoading(false);
   };
 
-  // --- FIX: Reverted to the simple, original hook ---
   useEffect(() => {
     fetchData();
   }, [dateFilter, accountFilter, categoryFilter]);
-  // --- END FIX ---
 
-  // --- Event Handlers ---
   const handleOpenAddModal = () => {
     setTransactionToEdit(null);
     setIsAddModalOpen(true);
@@ -258,13 +243,15 @@ function ExpensesPage() {
     } else {
       setIsDeleteModalOpen(false);
       setTransactionToDelete(null);
-      fetchData(); // Just refetch data
+      fetchData(); 
     }
   };
-  // --- End Event Handlers ---
 
   return (
     <div>
+      {/* --- NEW: Navigation Back to Hub --- */}
+      <BackToHub to="/control" label="Back to Cash Flow Command" />
+
       <div
         style={{
           display: 'flex',
@@ -328,7 +315,6 @@ function ExpensesPage() {
       </div>
 
       <div className={styles.pageGrid}>
-        {/* --- SECTION 1: KPI Cards (UPDATED) --- */}
         <div className={styles.kpiSection}>
           <div className={`${styles.kpiCard} ${styles.red}`}>
             <h3 className={styles.kpiTitle}>Total Expense (Filtered)</h3>
@@ -336,14 +322,12 @@ function ExpensesPage() {
               {formatCurrency(kpiData.totalExpense)}
             </p>
           </div>
-          {/* --- KPI CARD 2: CHANGED --- */}
           <div className={`${styles.kpiCard} ${styles.gray}`}>
             <h3 className={styles.kpiTitle}>Top Category</h3>
             <p className={styles.kpiValue} style={{ fontSize: '1.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {kpiData.topCategory}
             </p>
           </div>
-          {/* --- KPI CARD 3: CHANGED --- */}
           <div className={`${styles.kpiCard} ${styles.gray}`}>
             <h3 className={styles.kpiTitle}>Average Monthly Expense</h3>
             <p className={styles.kpiValue}>
@@ -385,13 +369,11 @@ function ExpensesPage() {
                     fontSize="0.7rem"
                     tickFormatter={(val) => formatCurrency(val)}
                   />
-                  {/* --- WARNING FIX: Replace unused 'value' and 'name' with '_' --- */}
                   <Tooltip
                     formatter={(_value: number, _name: string, props: any) => 
                       formatCurrency(props.payload._rawExpense)
                     }
                   />
-                  {/* --- END FIX --- */}
                   <Bar dataKey="expense" fill={COLOR_EXPENSE} />
                 </BarChart>
               </ResponsiveContainer>
@@ -410,12 +392,11 @@ function ExpensesPage() {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    nameKey="name" // Added for safety
+                    nameKey="name"
                     label={(entry: any) =>
                       `${(entry.percent * 100).toFixed(0)}%`
                     }
                   >
-                    {/* --- UPDATED: Use new centralized palette --- */}
                     {pieChartData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
@@ -434,11 +415,10 @@ function ExpensesPage() {
         </div>
       </div>
 
-      {/* --- MODALS --- */}
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onTransactionAdded={fetchData} // FIX: Reverted to simple fetchData
+        onTransactionAdded={fetchData} 
         transactionType="Expense"
         transactionToEdit={transactionToEdit}
       />
