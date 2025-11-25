@@ -1,4 +1,4 @@
-/* Replace file: src/pages/Planners/FinancialIndependence.module.css */
+/* File: src/pages/Planners/FinancialIndependence.module.css */
 
 .pageHeader {
   composes: listHeader from '../Settings/Settings.module.css';
@@ -13,6 +13,8 @@
 .backButton {
   composes: cancelButton from '../Settings/Settings.module.css';
   text-decoration: none;
+  display: inline-flex; /* Ensures proper centering */
+  align-items: center;
 }
 
 .calculatorGrid {
@@ -49,9 +51,12 @@
   width: 100%;
 }
 
+/* --- INPUT ADDON FIX --- */
 .inputGroup {
   position: relative;
+  width: 100%;
 }
+
 .inputAddonSymbol {
   position: absolute;
   top: 0;
@@ -60,12 +65,18 @@
   display: flex;
   align-items: center;
   color: #6b7280;
-  pointer-events: none;
+  pointer-events: none; /* Allows clicking through to input */
+  font-weight: 600;
+  z-index: 10;
 }
+
 .inputWithAddon {
   composes: input;
-  padding-left: 1.8rem;
+  /* FORCE padding to clear the dollar sign */
+  padding-left: 2.5rem !important; 
+  width: 100%;
 }
+/* ----------------------- */
 
 .labelWithIcon {
   display: flex;
@@ -74,22 +85,16 @@
   margin-bottom: 0.25rem;
 }
 
-/* --- THIS IS THE FIX --- */
 .tooltipContent {
-  /* 1. Make the inside white */
   background: #ffffff;
-  
-  /* 2. Set font size to 0.7rem */
-  font-size: 0.7rem; 
-  color: #374151; /* gray-700 */
-  padding: 0.25rem; /* Add a little space */
+  font-size: 0.75rem; 
+  color: #374151; 
+  padding: 0.25rem; 
 }
 .tooltipContent strong {
-  color: #111827; /* gray-900 */
+  color: #111827; 
   font-weight: 600;
 }
-/* --- END OF FIX --- */
-
 
 /* --- KPI Grid --- */
 .kpiGrid {
@@ -102,7 +107,7 @@
 .kpiCard {
   composes: kpiCard from '../Settings/Settings.module.css';
   text-align: center;
-  min-height: 0; /* Override default */
+  min-height: 0; 
 }
 
 .kpiTitle {
@@ -112,7 +117,7 @@
 
 .kpiValue {
   composes: kpiValue from '../Settings/Settings.module.css';
-  font-size: 2.25rem; /* Make it large */
+  font-size: 2.25rem; 
   text-align: center;
 }
 
@@ -120,7 +125,7 @@
   height: 400px;
 }
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 900px) {
   .calculatorGrid {
     grid-template-columns: 1fr;

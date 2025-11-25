@@ -1,19 +1,21 @@
 /* File: src/main.tsx */
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import './index.css'; 
 
 // --- Providers ---
-// NEW: Import the Toast Provider
 import { GamificationToastProvider } from './context/GamificationToastContext';
+
+// --- Logic Components ---
+import QuestManager from './components/Gamification/QuestManager';
+import GuidanceInterceptor from './components/Gamification/GuidanceInterceptor';
 
 import Layout from './components/Layout/Layout';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 
-// ... (Keep all your existing imports for Hubs and Pages) ...
+// ... (Existing imports) ...
 import ControlHub from './pages/Hubs/ControlHub';
 import BuildHub from './pages/Hubs/BuildHub';
 import OptimizeHub from './pages/Hubs/OptimizeHub';
@@ -43,15 +45,33 @@ import Settings from './pages/Settings/Settings';
 import PlannersHub from './pages/Planners/PlannersHub';
 import OnboardingWizard from './pages/Onboarding/OnboardingWizard';
 
-// ... (Keep your router configuration exactly as it is) ...
+// --- WRAPPER COMPONENT ---
+const OnboardingPageWrapper = () => {
+  const navigate = useNavigate();
+  const handleWizardComplete = () => {
+    navigate('/control');
+  };
+  return <OnboardingWizard onComplete={handleWizardComplete} />;
+};
+
 const router = createBrowserRouter([
-  // ... existing routes ...
   {
     path: '/',
-    element: <Layout />,
+    // Wrap the Layout in the Game Logic Components
+    element: (
+      <>
+        <QuestManager />
+        <GuidanceInterceptor />
+        <Layout />
+      </>
+    ),
     children: [
       { path: '/', element: <ControlHub /> }, 
-      { path: '/control', element: <ControlHub /> }, 
+      { path: '/control', element: <ControlHub /> },
+      
+      // --- FIX: Add Alias for Thematic URL ---
+      { path: '/cash-flow-command', element: <ControlHub /> },
+
       { path: '/build', element: <BuildHub /> }, 
       { path: '/optimize', element: <OptimizeHub /> }, 
       { path: '/transactions-hub', element: <TransactionHubPage /> }, 
@@ -78,7 +98,7 @@ const router = createBrowserRouter([
       { path: '/categories', element: <CategoriesPage /> },
       { path: '/settings', element: <Settings /> },
       { path: '/planners', element: <PlannersHub /> },
-      { path: '/onboarding', element: <OnboardingWizard /> },
+      { path: '/onboarding', element: <OnboardingPageWrapper /> },
     ],
   },
   { path: '/login', element: <Login /> },
@@ -87,7 +107,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* WRAP THE ROUTER IN THE PROVIDER */}
     <GamificationToastProvider>
       <RouterProvider router={router} />
     </GamificationToastProvider>

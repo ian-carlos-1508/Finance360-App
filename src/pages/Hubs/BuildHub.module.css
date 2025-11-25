@@ -1,202 +1,293 @@
 /* src/pages/Hubs/BuildHub.module.css */
 
+/* --- SHARED LAYOUT (Matches ControlHub) --- */
 .container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding-bottom: 3rem;
-  animation: fadeIn 0.5s ease-in-out;
+  padding-bottom: 6rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- HERO: THE BATTLE ARENA --- */
-.battleArena {
+.cockpitGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 0.8fr; /* Match ControlHub Ratio */
   gap: 1.5rem;
   align-items: stretch;
 }
 
 @media (max-width: 768px) {
-  .battleArena {
-    grid-template-columns: 1fr;
-  }
+  .cockpitGrid { grid-template-columns: 1fr; }
 }
 
-.battleCard {
+/* --- CARDS --- */
+.gaugeCard {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
-  padding: 1.5rem; /* Standard padding */
+  padding: 2rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   position: relative;
-  overflow: hidden;
-  min-height: 280px; 
+  min-height: 340px; 
 }
 
-.cardHeader {
-  font-size: 0.85rem;
+.summaryCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 0; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.summaryContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  gap: 1rem;
+  flex: 1;
+}
+
+/* --- HEADERS --- */
+.gaugeHeader {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  text-align: left;
+}
+
+.gaugeTitle {
+  font-size: 1.25rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem; 
+  color: #374151;
+}
+
+.gaugeSubtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* --- WIDGET 1: LIQUIDITY TANK (Vertical) --- */
+.tankContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 180px;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.tankWrapper {
+  width: 100px;
+  height: 100%;
+  background: #f3f4f6;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tankFluid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+      transition: height 1s ease-in-out;
+  opacity: 0.9;
+}
+
+/* Marker Lines */
+.markerLine {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 1px dashed rgba(107, 114, 128, 0.4);
   z-index: 10;
 }
 
-.shieldHeader { color: #059669; } 
-.bossHeader { color: #dc2626; }   
-
-/* --- THE SHIELD VISUALS (Compact) --- */
-.shieldWrapper {
-  width: 80px;
-  height: 90px;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 4px 6px rgba(16, 185, 129, 0.2));
-  transition: transform 0.3s ease;
+.markerLabel {
+  position: absolute;
+  right: 4px;
+  top: -12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #6b7280;
+  background: rgba(255,255,255,0.8);
+  padding: 0 2px;
+  border-radius: 4px;
 }
 
-.battleCard:hover .shieldWrapper {
-  transform: scale(1.05);
-}
-
-/* --- THE BOSS VISUALS (Compact) --- */
-.bossWrapper {
-  width: 100%;
-  max-width: 240px;
-  margin-bottom: 1rem;
+.gaugeValueDisplay {
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
 }
 
-.bossAvatar {
-  font-size: 3rem; 
-  margin-bottom: 0.25rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-  line-height: 1;
-}
-
-.healthBarContainer {
-  width: 100%;
-  height: 18px; 
-  background-color: #fee2e2; 
-  border: 1px solid #ef4444; 
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-}
-
-.healthBarFill {
-  height: 100%;
-  background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
-  transition: width 1s ease-in-out;
-}
-
-/* --- METRICS & ACTIONS --- */
-.metricLarge {
-  font-size: 1.8rem; 
+.bigNumber {
+  font-size: 2.5rem;
   font-weight: 800;
   color: #111827;
   line-height: 1;
-  margin-bottom: 0.25rem;
 }
 
-.metricSub {
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin-bottom: 1.25rem;
+.statusMessage {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  padding: 6px 16px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.actionButton {
-  margin-top: auto;
-  padding: 0.5rem 1rem; 
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.statusDanger { background-color: #fef2f2; color: #ef4444; }
+.statusSafe { background-color: #ecfdf5; color: #059669; }
 
-.btnShield {
-  background-color: #ecfdf5;
-  color: #059669;
-  border: 1px solid #d1fae5;
-}
-.btnShield:hover { background-color: #d1fae5; }
-
-.btnAttack {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fee2e2;
-}
-.btnAttack:hover { background-color: #fee2e2; }
-
-/* --- RESILIENCE SCORE --- */
-.resilienceSection {
-  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-  border-radius: 16px;
-  padding: 1.5rem; 
-  color: white;
+/* --- WIDGET 2: BARREL DISPLAY (Drag Coefficient) --- */
+.barrelContainer {
   display: flex;
-  justify-content: space-between;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2rem;
+  height: 180px;
+  margin-bottom: 1rem;
+}
+
+.barrelWrapper {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+  width: 70px;
 }
 
-.resTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  opacity: 0.9;
-  margin-bottom: 0.25rem;
+.barrel {
+  width: 100%;
+  height: 120px;
+  background-color: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px 8px 4px 4px; /* Barrel shape */
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: flex-end;
 }
 
-.resDesc {
+.barrelFill {
+  width: 100%;
+  transition: height 1s ease-in-out;
+  border-top: 1px solid rgba(255,255,255,0.5);
+}
+
+.barrelLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- NET POSITION BOX (Bottom of Right Card) --- */
+.netPositionBox {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.netPositionLabel {
   font-size: 0.85rem;
-  opacity: 0.8;
-  max-width: 400px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.resScore {
-  text-align: right;
-}
-
-.resValue {
-  font-size: 2.2rem; 
-  font-weight: 800;
+.netPositionValue {
+  font-size: 1.75rem; 
+  font-weight: 900;
   line-height: 1;
 }
 
-.resLabel {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
+/* --- 3-COLUMN GRID (Flight Recorder) --- */
+.recorderGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 1024px) { .recorderGrid { grid-template-columns: 1fr; } }
+
+/* --- TARGET LIST (Hit List Visual Improvements) --- */
+
+.radarItem {
+    /* CONVERT TO FLEX ROW for optimal spacing and alignment */
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically center content */
+    
+    padding: 1rem 1.4rem 1rem 1.4rem; /* Increased padding slightly for spacious look */
+    
+    background: #f9fafb; 
+    border-radius: 8px;
+    margin-bottom: 0.8rem; /* Increased margin between items */
+    border-left: 6px solid var(--toxic-color, #EE6C4D); /* Increased border width */
+    transition: background 0.2s;
 }
 
-/* --- NAVIGATION DECK --- */
-.navSection {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.radarItem:hover {
+    background: #f3f4f6;
 }
+
+.radarDetails { /* NEW: Container for Name and APR, stacking them vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.radarName {
+    font-size: 1rem; /* INCREASED from 0.8rem */
+    font-weight: 700;
+    color: #293241;
+    margin-bottom: 0.15rem;
+}
+
+.radarApr {
+    font-size: 0.8rem; /* INCREASED from 0.7rem */
+    font-weight: 600;
+    color: #6b7280;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.radarBalance {
+    font-size: 1.3rem; /* INCREASED from 1.0rem for emphasis */
+    font-weight: 800;
+    color: var(--balance-color, #EE6C4D); 
+    flex-shrink: 0; 
+}
+/* All other CSS remains as previously defined */
+
+/* --- BOTTOM NAV --- */
+.navSection { display: flex; flex-direction: column; gap: 1rem; }
 
 .sectionTitle {
-  font-size: 1.25rem; 
+  font-size: 1.25rem;
   font-weight: 800;
   color: #1f2937;
   display: flex;
@@ -205,28 +296,26 @@
 }
 
 .navGrid {
-  /* FIXED: Reduced minmax from 300px to 240px to allow 4 cards in one row */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
+@media (max-width: 1024px) { .navGrid { grid-template-columns: 1fr; } }
 
 .navCard {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 1.5rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
-
 .navCard:hover {
-  border-color: #4f46e5; 
+  border-color: #3b82f6;
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
@@ -238,30 +327,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
+.iconTeal { background: #E0FBFC; color: #0d9488; }
+.iconRose { background: #fef2f2; color: #EE6C4D; } /* Updated to Burnt Orange */
+.iconIndigo { background: #E0FBFC; color: #3D5A80; } /* Updated to Slate Blue */
+
 .navContent { flex: 1; }
-
-.navTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.navSubtitle {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
-
-.arrowIcon {
-  color: #9ca3af;
-  transition: transform 0.2s;
-}
-
-.navCard:hover .arrowIcon {
-  color: #4f46e5;
-  transform: translateX(4px);
-}
+.navTitle { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 0.25rem; }
+.navSubtitle { font-size: 0.8rem; color: #6b7280; line-height: 1.4; }

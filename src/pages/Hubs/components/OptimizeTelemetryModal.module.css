@@ -1,0 +1,77 @@
+/* File: src/pages/Hubs/components/OptimizeTelemetryModal.module.css */
+
+.container {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 500px; 
+    width: 100%;
+}
+
+/* --- TAB NAVIGATION --- */
+.tabHeader {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+.tabButton {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+    color: #374151;
+}
+
+.tabButtonActive {
+    composes: tabButton;
+    color: #3b82f6; /* Brand Blue */
+    border-bottom-color: #3b82f6;
+}
+
+/* --- CHART CONTAINERS --- */
+/* Now takes up full space since it's one at a time */
+.singleChartWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 350px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #f3f4f6;
+    padding: 1rem;
+}
+
+.chartTitle {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.chartArea {
+    flex: 1;
+    width: 100%;
+}
+
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    background: #f9fafb;
+    border-radius: 8px;
+}

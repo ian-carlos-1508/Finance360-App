@@ -5,8 +5,7 @@ import styles from './InvestmentCalculator.module.css';
 import sharedStyles from '../Settings/Settings.module.css';
 import { Link } from 'react-router-dom';
 import { formatCurrency } from '../../lib/utils';
-// NEW: Import BackToHub
-import BackToHub from '../../components/Navigation/BackToHub';
+// REMOVED: Import BackToHub
 import {
   ResponsiveContainer,
   LineChart,
@@ -90,12 +89,10 @@ function InvestmentCalculator() {
 
   return (
     <div>
-      {/* NEW: Back to Hub Navigation */}
-      <BackToHub to="/optimize" label="Back to Wealth HQ" />
+      {/* REMOVED: Back to Hub Navigation */}
       
       <div className={styles.pageHeader}>
         <h1 className={styles.title}>Investment Calculator</h1>
-        {/* The original back button (now redundant) replaced by a clean link */}
         <Link to="/planners" className={sharedStyles.cancelButton}>
           &larr; Back to Planners
         </Link>
@@ -106,7 +103,7 @@ function InvestmentCalculator() {
         <div className={styles.inputCard}>
           <h2 className={sharedStyles.cardTitle}>Set Your Projections</h2>
           <form className={styles.inputForm}>
-            {/* --- MODIFIED: Initial Amount --- */}
+            {/* --- Initial Amount --- */}
             <div className={styles.formRow}>
               <label htmlFor="initialAmount" className={styles.label}>
                 Initial Amount
@@ -124,7 +121,7 @@ function InvestmentCalculator() {
               </div>
             </div>
 
-            {/* --- MODIFIED: Monthly Contribution --- */}
+            {/* --- Monthly Contribution --- */}
             <div className={styles.formRow}>
               <label htmlFor="monthlyContribution" className={styles.label}>
                 Monthly Contribution
@@ -142,7 +139,7 @@ function InvestmentCalculator() {
               </div>
             </div>
 
-            {/* --- UNMODIFIED: Time (Years) --- */}
+            {/* --- Time (Years) --- */}
             <div className={styles.formRow}>
               <label htmlFor="years" className={styles.label}>
                 Time (in Years)
@@ -156,7 +153,7 @@ function InvestmentCalculator() {
               />
             </div>
 
-            {/* --- UNMODIFIED: Annual Rate --- */}
+            {/* --- Annual Rate --- */}
             <div className={styles.formRow}>
               <label htmlFor="apr" className={styles.label}>
                 Estimated Annual Rate (%)
@@ -172,9 +169,8 @@ function InvestmentCalculator() {
           </form>
         </div>
 
-        {/* --- Results Card (Unchanged) --- */}
+        {/* --- Results Card --- */}
         <div className={styles.resultCard}>
-          {/* ... all results content ... */}
           <div className={styles.kpiCard}>
             <h3 className={styles.kpiTitle}>
               Projected Value (in {years} years)

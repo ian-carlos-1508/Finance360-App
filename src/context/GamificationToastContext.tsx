@@ -2,12 +2,13 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { HiLightningBolt, HiExclamationCircle } from 'react-icons/hi';
+import styles from './GamificationToastContext.module.css';
 
 type ToastType = 'success' | 'warning';
 
 interface Toast {
   id: number;
-  amount: number; // XP amount (0 for warnings)
+  amount: number; 
   message: string;
   type: ToastType;
 }
@@ -45,31 +46,23 @@ export const GamificationToastProvider: React.FC<{ children: React.ReactNode }> 
     <GamificationToastContext.Provider value={{ showXpToast, showWarningToast }}>
       {children}
       
-      {/* TOAST CONTAINER (Fixed Bottom Center) */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none">
+      <div className={styles.toastContainer}>
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`
-              flex items-center gap-3 px-6 py-3 rounded-full shadow-2xl border transform transition-all duration-500 ease-out animate-bounce-in
-              ${toast.type === 'success' 
-                ? 'bg-gray-900 text-white border-gray-700' 
-                : 'bg-red-50 text-red-700 border-red-200'
-              }
-            `}
-            style={{ minWidth: '240px' }}
+            className={`${styles.toastItem} ${toast.type === 'success' ? styles.success : styles.warning}`}
           >
             <div 
-              className={`p-1.5 rounded-full ${toast.type === 'success' ? 'bg-yellow-500 text-gray-900' : 'bg-red-200 text-red-700'}`}
+              className={`${styles.iconWrapper} ${toast.type === 'success' ? styles.iconSuccess : styles.iconWarning}`}
             >
               {toast.type === 'success' ? <HiLightningBolt size={16} /> : <HiExclamationCircle size={16} />}
             </div>
             
-            <div className="flex flex-col">
-              <span className="text-xs font-bold uppercase tracking-wider opacity-80">
+            <div className={styles.content}>
+              <span className={styles.label}>
                 {toast.type === 'success' ? 'Level Up Protocol' : 'System Alert'}
               </span>
-              <span className="font-bold text-sm">
+              <span className={styles.message}>
                 {toast.type === 'success' && `+${toast.amount} XP | `} 
                 {toast.message}
               </span>
@@ -77,6 +70,7 @@ export const GamificationToastProvider: React.FC<{ children: React.ReactNode }> 
           </div>
         ))}
       </div>
+
     </GamificationToastContext.Provider>
   );
 };

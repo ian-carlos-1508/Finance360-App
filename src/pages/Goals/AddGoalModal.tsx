@@ -8,12 +8,13 @@ import { type Account } from '../../components/Accounts/AddAccountForm';
 import { formatCurrency } from '../../lib/utils';
 import { type Goal } from './types'; 
 
-// --- NEW: Gamification Import ---
+// --- GAMIFICATION IMPORTS ---
 import { useGamificationToast } from '../../context/GamificationToastContext';
+import { useFinancialJourney } from '../../hooks/useFinancialJourney';
 
-// --- NEW Type Definitions ---
+// --- Type Definitions ---
 type Debt = {
-  id: string; // Can be debt_id or account_id
+  id: string;
   name: string;
   type: 'Debt' | 'Credit Card';
 };
@@ -25,50 +26,44 @@ interface AddGoalModalProps {
   goalToEdit: Goal | null;
 }
 
-// --- Main Component ---
 function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps) {
-  // Form State
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [targetDate, setTargetDate] = useState('');
   const [goalType, setGoalType] = useState<string>('Savings');
   
-  // Funding State
   const [linkedAccountId, setLinkedAccountId] = useState('manual');
   const [currentAmount, setCurrentAmount] = useState('0');
   const [monthlyContribution, setMonthlyContribution] = useState('0');
 
-  // Data for Dropdowns
   const [savingsAccounts, setSavingsAccounts] = useState<Account[]>([]);
   const [allDebts, setAllDebts] = useState<Debt[]>([]);
 
-  // App State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // --- NEW: Hook ---
+  // --- GAMIFICATION HOOKS ---
   const { showXpToast } = useGamificationToast();
+  const { refreshJourney } = useFinancialJourney();
 
-  // Fetch data for dropdowns
   useEffect(() => {
     if (!isOpen) return;
 
     const fetchDropdownData = async () => {
       setLoading(true);
-      // 1. Fetch Savings Accounts (type = 'cash')
+      // 1. Fetch Savings
       const { data: accounts } = await supabase
         .from('accounts')
         .select('*')
         .eq('type', 'cash');
       if (accounts) setSavingsAccounts(accounts);
 
-      // 2. Fetch Debts (type = 'credit')
+      // 2. Fetch Debts (Cards + Loans)
       const { data: creditCards } = await supabase
         .from('accounts')
         .select('account_id, account_name')
         .eq('type', 'credit');
       
-      // 3. Fetch Loans (from 'debts' table)
       const { data: loans } = await supabase
         .from('debts')
         .select('debt_id, debt_name');
@@ -87,7 +82,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
     fetchDropdownData();
   }, [isOpen]);
 
-  // Pre-fill form if editing
   useEffect(() => {
     if (goalToEdit) {
       setGoalName(goalToEdit.goal_name);
@@ -98,7 +92,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
       setCurrentAmount(goalToEdit.current_amount.toString());
       setMonthlyContribution(goalToEdit.monthly_contribution?.toString() || '0');
     } else {
-      // Reset form
       setGoalName('');
       setTargetAmount('');
       setTargetDate('');
@@ -109,7 +102,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
     }
   }, [goalToEdit, isOpen]);
 
-  // --- Handlers ---
   const handleClose = () => {
     setError('');
     onClose();
@@ -117,7 +109,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
 
   const handleGoalTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGoalType(e.target.value);
-    // Reset linking when type changes
     setLinkedAccountId('manual');
     setCurrentAmount('0');
   };
@@ -133,7 +124,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
       target_date: targetDate || null,
       goal_type: goalType,
       linked_account_id: linkedAccountId === 'manual' ? null : linkedAccountId,
-      // Only save current_amount if tracking manually
       current_amount: linkedAccountId === 'manual' ? parseFloat(currentAmount) : 0,
       monthly_contribution: parseFloat(monthlyContribution) || 0,
     };
@@ -150,25 +140,38 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
       setError(dbError.message);
     } else {
       // --- GAMIFICATION TRIGGER ---
+      // We need to check the ACTUAL current balance to see if they won
+      let actualCurrent = parseFloat(currentAmount);
       const target = parseFloat(targetAmount);
-      const current = parseFloat(currentAmount); // Note: If linked, this is 0 here, handled by DB trigger usually.
-      // However, if manual update hits 100%, show toast.
-      
-      if (current >= target && linkedAccountId === 'manual') {
-         showXpToast(100, "GOAL CRUSHED! 🏆");
-      } else if (!goalToEdit) {
-         showXpToast(10, "Goal Set! 🎯");
-      } else {
-         // Silent update or minor feedback
+
+      if (linkedAccountId !== 'manual') {
+         // If linked, fetch the real balance from DB to check progress
+         // (Note: Credit cards/debts use negative balance, so we use ABS)
+         const { data: acc } = await supabase
+            .from('accounts')
+            .select('current_balance')
+            .eq('account_id', linkedAccountId)
+            .single();
+         
+         if (acc) {
+            actualCurrent = Math.abs(acc.current_balance); 
+         }
       }
 
-      onSave(); // Trigger a data refresh on the main page
+      if (actualCurrent >= target) {
+         showXpToast(100, "GOAL CRUSHED! 🏆");
+         refreshJourney(); // Trigger sidebar update
+      } else if (!goalToEdit) {
+         showXpToast(10, "Goal Set! 🎯");
+         refreshJourney();
+      }
+
+      onSave();
       handleClose();
     }
     setLoading(false);
   };
 
-  // --- Dynamic Dropdown Logic ---
   const renderTrackingOptions = () => {
     if (goalType === 'Savings') {
       return (
@@ -277,7 +280,6 @@ function AddGoalModal({ isOpen, onClose, onSave, goalToEdit }: AddGoalModalProps
           {renderTrackingOptions()}
         </div>
 
-        {/* Show Current Amount field only if tracking manually */}
         {linkedAccountId === 'manual' && (
           <div className={styles.formRow}>
             <label className={styles.label}>Current Amount</label>

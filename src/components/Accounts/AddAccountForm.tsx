@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../pages/Settings/Settings.module.css';
 import { supabase } from '../../lib/supabaseClient';
 
-// --- UPDATED: Added 'investment' to the type ---
 export type Account = {
   account_id: string;
   account_name: string;
@@ -12,23 +11,23 @@ export type Account = {
   initial_balance: number;
   current_balance: number;
   type: 'cash' | 'credit' | 'investment';
-  credit_limit: number | null; // Allow null
+  credit_limit: number | null;
   apr: number | null;
   minimum_payment: number | null;
 };
-// --- End Update ---
 
 interface AddAccountFormProps {
   accountToEdit: Account | null;
   onSave: (newAccount: Account) => void;
   onCancel: () => void;
+  // NEW: Allow locking the form to a specific type (for Wizard)
+  forcedType?: 'cash' | 'credit' | 'investment';
 }
 
-function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps) {
+function AddAccountForm({ accountToEdit, onSave, onCancel, forcedType }: AddAccountFormProps) {
   const [accountName, setAccountName] = useState('');
   const [bankName, setBankName] = useState('');
   const [initialBalance, setInitialBalance] = useState('0');
-  // --- UPDATED: Use the specific union type ---
   const [type, setType] = useState<'cash' | 'credit' | 'investment'>('cash');
   const [creditLimit, setCreditLimit] = useState('0');
   const [apr, setApr] = useState('0');
@@ -41,11 +40,7 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
     if (accountToEdit) {
       setAccountName(accountToEdit.account_name);
       setBankName(accountToEdit.bank_name);
-      
-      // FIX: When editing, show the positive "owed" amount
       setInitialBalance(Math.abs(accountToEdit.initial_balance).toString());
-      
-      // --- UPDATED: Cast the type correctly ---
       setType(accountToEdit.type as 'cash' | 'credit' | 'investment');
       setCreditLimit(accountToEdit.credit_limit?.toString() || '0');
       setApr(accountToEdit.apr?.toString() || '0');
@@ -54,12 +49,13 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
       setAccountName('');
       setBankName('');
       setInitialBalance('0');
-      setType('cash');
+      // Use forced type if provided, otherwise default to cash
+      setType(forcedType || 'cash');
       setCreditLimit('0');
       setApr('0');
       setMinimumPayment('0');
     }
-  }, [accountToEdit]);
+  }, [accountToEdit, forcedType]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,26 +65,21 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
     const isCredit = type === 'credit';
     const parsedBalance = parseFloat(initialBalance) || 0;
 
-    /* --- THIS IS THE CRITICAL BUG FIX ---
-       If the type is 'credit', save the 'initial_balance' as a
-       negative number to represent debt.
-    */
     const accountData = {
       account_name: accountName,
       bank_name: bankName,
-      initial_balance: isCredit ? -Math.abs(parsedBalance) : parsedBalance, // <-- THE FIX
+      // Credits are negative
+      initial_balance: isCredit ? -Math.abs(parsedBalance) : parsedBalance,
       type: type,
       credit_limit: isCredit ? parseFloat(creditLimit) || 0 : 0, 
       apr: isCredit ? parseFloat(apr) || 0 : 0, 
       minimum_payment: isCredit ? parseFloat(minimumPayment) || 0 : 0,
     };
-    /* --- END BUG FIX --- */
 
     let savedAccount: Account | null = null;
     let dbError: any = null;
 
     if (accountToEdit) {
-      // --- SYNTAX FIX: Removed the 'U' ---
       const { data, error } = await supabase
         .from('accounts')
         .update(accountData)
@@ -110,7 +101,7 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
     if (dbError) {
       setError(dbError.message);
     } else if (savedAccount) {
-      onSave(savedAccount as Account); // Cast to be sure
+      onSave(savedAccount as Account);
     }
     setLoading(false);
   };
@@ -143,24 +134,31 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
         />
       </div>
       
-      <div className={styles.formRow}>
-        <label className={styles.label} htmlFor="account-type">Account Type</label>
-        <select
-          id="account-type"
-          className={styles.input}
-          value={type}
-          onChange={(e) => setType(e.target.value as 'cash' | 'credit' | 'investment')}
-        >
-          <option value="cash">Cash (Checking, Savings, etc.)</option>
-          <option value="credit">Credit Card</option>
-          {/* --- NEWLY ADDED OPTION --- */}
-          <option value="investment">Investment (Brokerage)</option>
-        </select>
-      </div>
+      {/* Only show Type Selector if NOT forced */}
+      {!forcedType ? (
+        <div className={styles.formRow}>
+          <label className={styles.label} htmlFor="account-type">Account Type</label>
+          <select
+            id="account-type"
+            className={styles.input}
+            value={type}
+            onChange={(e) => setType(e.target.value as 'cash' | 'credit' | 'investment')}
+          >
+            <option value="cash">Cash (Checking, Savings)</option>
+            <option value="credit">Credit Card</option>
+            <option value="investment">Investment (Brokerage)</option>
+          </select>
+        </div>
+      ) : (
+        /* Hidden visual cue so user knows what they are adding */
+        <div className="mb-4 text-xs font-bold uppercase tracking-wide text-gray-400">
+           Adding: {forcedType === 'cash' ? 'Cash Account' : forcedType === 'credit' ? 'Credit Card' : 'Investment Account'}
+        </div>
+      )}
 
       <div className={styles.formRow}>
         <label className={styles.label} htmlFor="initial-balance">
-          {type === 'credit' ? 'Current Owed' : 'Initial Balance'}
+          {type === 'credit' ? 'Current Owed' : 'Current Balance'}
         </label>
         <input
           id="initial-balance"
@@ -174,7 +172,6 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
         />
       </div>
       
-      {/* --- Conditional Fields for Credit Cards (this logic is already correct) --- */}
       {type === 'credit' && (
         <>
           <div className={styles.formRow}>
@@ -222,11 +219,12 @@ function AddAccountForm({ accountToEdit, onSave, onCancel }: AddAccountFormProps
       {error && <p className={styles.errorText}>{error}</p>}
 
       <div className={styles.modalFooter}>
+        {/* In Wizard Mode, "Cancel" might just clear the form, but we keep the button for standard use */}
         <button type="button" className={styles.cancelButton} onClick={onCancel} disabled={loading}>
-          Cancel
+          Clear
         </button>
         <button type="submit" className={styles.saveButton} disabled={loading}>
-          {loading ? 'Saving...' : (accountToEdit ? 'Save Changes' : 'Save Account')}
+          {loading ? 'Saving...' : 'Save & Add'}
         </button>
       </div>
     </form>

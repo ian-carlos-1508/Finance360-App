@@ -1,0 +1,56 @@
+/* File: src/pages/Hubs/components/BuildTelemetryModal.module.css */
+
+.container {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Force two columns */
+    gap: 2rem;
+    height: 500px; /* Explicit height is required for Recharts */
+    width: 100%;
+}
+
+/* Mobile Stack */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 600px;
+    }
+}
+
+.dualChartWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    min-height: 200px;
+}
+
+.chartTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 0.75rem;
+}
+
+.chartArea {
+    flex: 1;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    /* Optional: subtle border to verify container existence during debug */
+    /* border: 1px dashed #e5e7eb; */ 
+}
+
+.loadingContainer {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    background: #f9fafb;
+    border-radius: 8px;
+}

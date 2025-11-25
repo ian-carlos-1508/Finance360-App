@@ -5,7 +5,11 @@ import styles from '../../pages/Settings/Settings.module.css';
 import budgetStyles from '../../pages/Budgets/Budgets.module.css';
 import { supabase } from '../../lib/supabaseClient';
 import Modal from '../Modal/Modal';
-import TooltipInfo from '../Tooltip/TooltipInfo'; // <-- NEW: Import Tooltip
+import TooltipInfo from '../Tooltip/TooltipInfo';
+
+// --- GAMIFICATION IMPORTS ---
+import { useGamificationToast } from '../../context/GamificationToastContext';
+import { useFinancialJourney } from '../../hooks/useFinancialJourney';
 
 // Types
 type SubCategory = {
@@ -15,15 +19,17 @@ type SubCategory = {
 };
 type MainCategory = string;
 
-// Budget type from our DB (now has new fields)
-type Budget = {
+// Budget type matching YOUR DB SCHEMA
+export type Budget = {
   budget_id: string;
   month: number;
   year: number;
   budgeted_amount: number;
   category_id: string | null; 
   main_category: string | null; 
-  allow_rollover: boolean; // NEW FIELD
+  // Note: category_name removed from DB type, handled by join in RPC for display
+  category_name?: string; // Optional for UI display if passed from parent
+  allow_rollover: boolean; 
 };
 
 interface AddBudgetModalProps {
@@ -41,9 +47,9 @@ function AddBudgetModal({
 }: AddBudgetModalProps) {
   // Form state
   const [amount, setAmount] = useState('');
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // 1-12
+  const [month, setMonth] = useState(new Date().getMonth() + 1); 
   const [year, setYear] = useState(new Date().getFullYear());
-  const [allowRollover, setAllowRollover] = useState(false); // NEW STATE
+  const [allowRollover, setAllowRollover] = useState(false); 
   
   const [budgetLevel, setBudgetLevel] = useState<'main' | 'sub'>('main');
   const [mainCategory, setMainCategory] = useState<string>('');
@@ -56,6 +62,10 @@ function AddBudgetModal({
   // App state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // --- GAMIFICATION HOOKS ---
+  const { showXpToast } = useGamificationToast();
+  const { refreshJourney } = useFinancialJourney();
 
   // Fetch expense categories when modal opens
   useEffect(() => {
@@ -79,7 +89,7 @@ function AddBudgetModal({
         setAmount(budgetToEdit.budgeted_amount.toString());
         setMonth(budgetToEdit.month);
         setYear(budgetToEdit.year);
-        setAllowRollover(budgetToEdit.allow_rollover || false); // Set toggle state
+        setAllowRollover(budgetToEdit.allow_rollover || false); 
         
         if (budgetToEdit.main_category) {
           setBudgetLevel('main');
@@ -98,7 +108,7 @@ function AddBudgetModal({
         setBudgetLevel('main');
         setMainCategory('');
         setSubCategoryId('');
-        setAllowRollover(false); // Reset toggle
+        setAllowRollover(false); 
       }
     }
   }, [isOpen, budgetToEdit]);
@@ -119,13 +129,14 @@ function AddBudgetModal({
     setLoading(true);
     setError('');
 
+    // FIX: Removed category_name from payload to match DB schema
     const budgetData = {
       month: Number(month),
       year: Number(year),
       budgeted_amount: parseFloat(amount),
       main_category: budgetLevel === 'main' ? mainCategory : null,
       category_id: budgetLevel === 'sub' ? subCategoryId : null,
-      allow_rollover: allowRollover, // Add new value
+      allow_rollover: allowRollover, 
     };
     
     let dbError: any = null;
@@ -144,6 +155,13 @@ function AddBudgetModal({
     if (dbError) {
       setError(dbError.message);
     } else {
+      // --- GAMIFICATION TRIGGER ---
+      // Only award XP for NEW budgets
+      if (!budgetToEdit) {
+         showXpToast(50, "Budget Assigned! 📉");
+         refreshJourney();
+      }
+
       clearForm();
       onBudgetAdded();
       onClose();
@@ -174,7 +192,7 @@ function AddBudgetModal({
             className={styles.input}
             value={budgetLevel}
             onChange={(e) => setBudgetLevel(e.target.value as 'main' | 'sub')}
-            disabled={!!budgetToEdit} // Can't change level when editing
+            disabled={!!budgetToEdit} 
           >
             <option value="main">By Main Category (e.g., Food)</option>
             <option value="sub">By Subcategory (e.g., Restaurants)</option>
@@ -224,10 +242,9 @@ function AddBudgetModal({
             id="amount"
             className={styles.input}
             type="number"
-            step="0.01"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
+            placeholder="e.g. 500"
             required
           />
         </div>
@@ -262,11 +279,8 @@ function AddBudgetModal({
           </select>
         </div>
 
-        {/* --- UPDATED: Allow Rollover Toggle --- */}
+        {/* --- Allow Rollover Toggle with Tooltip --- */}
         <div className={styles.formRow}>
-            {/* This label now uses flex to align the text and icon.
-              The <TooltipInfo> component replaces the old span.
-            */}
             <label 
               className={styles.label} 
               htmlFor="allow_rollover"

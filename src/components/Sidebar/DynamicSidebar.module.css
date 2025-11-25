@@ -159,7 +159,172 @@
   gap: 0.75rem; 
 }
 
-/* --- LEVEL CARDS (Base Style) --- */
+/* --- MAIN CONTAINER --- */
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background-color: #F9FAFB;
+  border-right: 1px solid #E5E7EB;
+}
+
+/* --- BRAND HEADER --- */
+.brandHeader {
+  padding: 1rem 1.5rem 0.5rem 1.5rem; 
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.brandHeaderCollapsed {
+  composes: brandHeader;
+  padding: 1rem 0;
+  justify-content: center;
+}
+
+.brandIcon {
+  font-size: 1.75rem;
+  color: #2563EB;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+  transition: color 0.3s ease;
+}
+
+.brandTitle {
+  display: flex;
+  align-items: flex-end; 
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  margin-left: 0.75rem;
+}
+
+.brandTextFinance {
+    font-size: 1.25rem;
+    color: #111827; 
+    font-weight: 800;
+}
+
+.brandText360 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-left: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #3b82f6; 
+}
+
+/* --- STREAK --- */
+.streakWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid #E5E7EB;
+    min-width: 65px;
+    color: #9CA3AF;
+}
+
+.streakIconActive {
+    color: #f97316;
+    filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.3));
+}
+
+.streakValue {
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+    color: #f97316;
+    text-shadow: 0 0 4px rgba(249, 115, 22, 0.3);
+}
+
+/* --- PLAYER CARD --- */
+.playerCard {
+  margin: 0 1rem 1rem 1rem;
+  padding: 0.75rem;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.levelBadge {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.xpInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.1;
+  overflow: hidden;
+  flex: 1;
+}
+
+.xpLabel {
+  font-size: 0.65rem; 
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #9CA3AF; 
+}
+
+.xpValue {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1F2937; 
+}
+
+/* --- NAVIGATION AREA (The Roadmap) --- */
+.navArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1rem 1rem 1rem; 
+  display: flex;
+  flex-direction: column;
+  /* Removed gap to handle connector lines manually */
+  position: relative; 
+}
+
+/* The Timeline Connector Line */
+.timelineConnector {
+  position: absolute;
+  left: 2.2rem; /* Aligns with center of icon */
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #E5E7EB;
+  z-index: 0;
+}
+
+/* --- LEVEL CARDS --- */
+.levelCardWrapper {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0.75rem; /* Spacing between cards */
+}
+
 .levelCard {
   display: flex;
   align-items: center;
@@ -174,12 +339,11 @@
 }
 
 .levelCard:hover {
-  transform: translateY(-2px);
+  transform: translateX(4px); /* Slide right instead of up */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   border-color: #BFDBFE;
 }
 
-/* Base Active/Locked Styles */
 .levelCardActive {
   composes: levelCard;
   box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
@@ -187,31 +351,37 @@
 
 .levelCardLocked {
   composes: levelCard;
-  opacity: 0.6;
+  /* Updated: Less opaque so it's readable */
+  opacity: 0.8; 
   background-color: #F9FAFB;
   border-color: #E5E7EB;
   cursor: not-allowed;
-  filter: grayscale(100%);
 }
 
-/* --- THEMATIC ACTIVE STYLES (Restored Unique Colors) --- */
+/* When locked, grayscale only the icon, not the text */
+.levelCardLocked .cardIcon {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+/* Thematic Styles */
 .levelCardControlActive {
     composes: levelCardActive;
-    border-color: #2563EB; /* Blue */
-    background-color: #EFF6FF; /* Light Blue */
+    border-color: #2563EB; 
+    background-color: #EFF6FF; 
 }
 .levelCardBuildActive {
     composes: levelCardActive;
-    border-color: #059669; /* Green */
-    background-color: #ECFDF5; /* Light Green */
+    border-color: #059669; 
+    background-color: #ECFDF5; 
 }
 .levelCardOptimizeActive {
     composes: levelCardActive;
-    border-color: #D97706; /* Amber */
-    background-color: #FFFBEB; /* Light Amber */
+    border-color: #D97706; 
+    background-color: #FFFBEB; 
 }
 
-/* Icon Box and Text Styles (Omitted for brevity, assumed unchanged) */
+/* Icon Box */
 .cardIcon {
   width: 40px;
   height: 40px;
@@ -219,9 +389,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.0rem;
+  font-size: 0.8rem;
   margin-right: 1rem;
   flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .cardContent {
@@ -232,14 +403,14 @@
 }
 
 .cardTitle {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #1F2937;
 }
 
 .cardSubtitle {
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 500;
   color: #6B7280;
 }
 
@@ -248,11 +419,45 @@
   font-size: 1.2rem;
 }
 
-.lockIcon {
-  color: #9CA3AF;
-  font-size: 1.2rem;
+/* --- THE FREEDOM CARD (Endgame) --- */
+.freedomCard {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  /* Premium Platinum/Gold Look */
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+  border: 1px dashed #94A3B8; /* Dashed to show it's the future */
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+  opacity: 0.7;
+  margin-top: 0.5rem;
 }
 
+.freedomIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Circular for the final goal */
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); /* Gold */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.freedomText {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- FOOTER --- */
 .footer {
   margin-top: auto;
   border-top: 1px solid #E5E7EB;
@@ -261,6 +466,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .footerLink {
@@ -288,7 +495,7 @@
 }
 
 .userName {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;

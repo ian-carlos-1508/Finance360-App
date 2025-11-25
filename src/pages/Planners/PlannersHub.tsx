@@ -1,14 +1,13 @@
-/* Replace file: src/pages/Planners/PlannersHub.tsx */
-
 import React from 'react';
 import styles from './PlannersHub.module.css';
 import sharedStyles from '../Settings/Settings.module.css';
 import { Link } from 'react-router-dom';
+// NEW: Import BackToHub
+import BackToHub from '../../components/Navigation/BackToHub'; 
 import {
   HiHome,
   HiStar,
   HiTrendingUp,
-  // --- 'HiOutlineReceiptTax' has been removed ---
 } from 'react-icons/hi';
 import { HiShieldCheck, HiBuildingOffice2 } from 'react-icons/hi2';
 
@@ -50,7 +49,6 @@ const planners = [
   },
 ];
 
-// ... (PlannerCard component remains unchanged)
 const PlannerCard: React.FC<typeof planners[0]> = ({
   title,
   description,
@@ -84,10 +82,12 @@ const PlannerCard: React.FC<typeof planners[0]> = ({
   );
 };
 
-// ... (PlannersHub component remains unchanged)
 function PlannersHub() {
   return (
     <div>
+      {/* ADDED: Navigation back to Wealth HQ */}
+      <BackToHub to="/optimize" label="Back to Wealth HQ" />
+
       <h1 className={sharedStyles.title}>Calculators & Planners</h1>
       <p className={sharedStyles.profileInfo}>
         Tools to help you plan your financial future, from debt payoff to

@@ -516,7 +516,7 @@ function SubscriptionsPage() {
   return (
     <div>
       {/* 1. BACK TO HUB NAVIGATION */}
-      <BackToHub to="/build" label="Back to Fortress Dashboard" />
+      <BackToHub to="/control" label="Back to Control Dashboard" />
       
       <div className={`${styles.listHeader} no-print`}>
         <h1 className={styles.title}>Subscriptions & Recurring</h1>

@@ -1,15 +1,16 @@
 /* File: src/types/journey.ts */
 
-// Note: Assuming these external types and interfaces are defined and correct
 export type ProgressStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'LOCKED';
 
 /**
  * Defines a single Actionable Module (e.g., Budgets, Goals, Investments).
  */
 export interface JourneyModule {
-    id: string; // e.g., 'm-budget', 'm-goals'
-    title: string; // e.g., 'Assign Budgets'
-    path: string; // The URL path to the module page
+    id: string; 
+    title: string; 
+    path: string; 
+    instruction?: string; 
+    xp_reward: number; 
     status: ProgressStatus;
     benefitStatement?: string; 
 }
@@ -32,19 +33,46 @@ export interface JourneyStep {
 }
 
 /**
- * The root structure returned by the API/Service.
+ * The root structure returned by the JourneyService.
  */
 export interface FinancialJourney {
     onboardingComplete: boolean; 
     currentStepId: JourneyStep['id'] | null;
     steps: JourneyStep[];
-    
     userLevel?: number;
     userXP?: number;
-
-    // NEW: Streak Data Structure
+    rankStatus?: 'CONFIRMED' | 'PROBATION'; 
     streak?: {
         currentStreak: number;
         lastActiveDate: string | null;
     };
+}
+
+/**
+ * Analytics data for the Tier 1 Flight Manual.
+ */
+export interface FlightManualData {
+    tx_count: number;
+    budget_count: number;
+    streak_days: number;
+    current_surplus: number;
+    three_month_surplus: number;
+}
+
+/**
+ * Analytics data for the Tier 2 Build Hub.
+ */
+export interface BuildHubData {
+    total_cash: number;
+    avg_expense: number;
+    liquidity_months: number;
+    toxic_debt: number;
+    strategic_debt: number;
+    debt_accounts: {
+        account_id: string;
+        account_name: string;
+        current_balance: number;
+        interest_rate: number;
+        type: string;
+    }[];
 }

@@ -342,7 +342,7 @@ function AccountsPage() {
   return (
     <div>
       {/* --- NEW: Navigation Back to Hub --- */}
-      <BackToHub to="/control" label="Back to Cash Flow Command" />
+      <BackToHub to="/build" label="Back to Fortress Dashboard" />
 
       <div
         style={{

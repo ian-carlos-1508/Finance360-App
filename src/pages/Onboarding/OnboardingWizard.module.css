@@ -7,22 +7,22 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(17, 24, 39, 0.85); /* Dark semi-transparent background */
-  backdrop-filter: blur(8px); /* This blurs the app behind it */
-  z-index: 99999; /* Ensures it sits on top of everything (even sidebar) */
+  background-color: rgba(17, 24, 39, 0.95); /* Darker, simplified background */
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  backdrop-filter: blur(5px);
 }
 
 /* The Modal Box */
 .modal {
   background-color: white;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   position: relative;
   animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -40,57 +40,73 @@
 }
 
 .stepContainer {
-  padding: 2rem;
+  padding: 1.5rem 2rem 2rem 2rem;
 }
 
 /* Typography & Elements */
-.emojiIcon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  display: block;
-}
-
 .title {
   font-size: 1.5rem;
   font-weight: 800;
   color: #111827;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   line-height: 1.2;
 }
 
 .subtitle {
   font-size: 0.9rem;
   color: #6b7280;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   line-height: 1.5;
 }
 
-/* Inputs (Reusing your settings style feel) */
-.inputGroup {
-  margin-bottom: 1rem;
+/* Context Label ("Adding: Cash Account") */
+.contextLabel {
+    font-size: 0.85rem; /* Increased size */
+    font-weight: 800;   /* Extra Bold */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1f2937;     /* Darker color for visibility */
+    margin-bottom: 0.75rem;
+    display: block;
 }
 
-.label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 0.5rem;
+/* "Added So Far" List */
+.addedListContainer {
+    margin-bottom: 1.5rem;
+    background-color: #F0FDF4; /* Light Green bg */
+    border: 1px solid #BBF7D0; /* Green border */
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s;
+.addedListHeader {
+    background-color: #DCFCE7;
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #15803D;
+    text-transform: uppercase;
+    border-bottom: 1px solid #BBF7D0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.input:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.addedItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #DCFCE7;
+    font-size: 0.85rem;
+    color: #166534;
+}
+.addedItem:last-child {
+    border-bottom: none;
+}
+
+.addedAmount {
+    font-weight: 700;
+    color: #14532D;
 }
 
 /* Buttons */
@@ -115,18 +131,12 @@
   background-color: #1d4ed8;
 }
 
-.primaryBtn:disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
-  cursor: not-allowed;
-}
-
 .secondaryActionRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   border-top: 1px solid #f3f4f6;
 }
 
@@ -190,4 +200,45 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Toggle Switch Container */
+.toggleContainer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem;
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Toggle Button Base */
+.toggleBtn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+/* Inactive State */
+.toggleBtnInactive {
+    background-color: transparent;
+    color: #6b7280; 
+}
+.toggleBtnInactive:hover {
+    color: #374151; 
+}
+
+/* Active State */
+.toggleBtnActive {
+    background-color: white;
+    color: #2563eb; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
